@@ -14,29 +14,53 @@ using cargo_transportation.Hash;
 
 namespace cargo_transportation
 {
-/// <summary>
-/// Логика взаимодействия для Authorization.xaml
-/// </summary>
-public partial class Authorization : Window
-{
-    // Data needed for authorization
-    private string _login;
-    private string _password;
-    private bool _isLoggedIn;
-    private bool _isAuthenticated;
-
-    public Authorization()
+    /// <summary>
+    /// Логика взаимодействия для Authorization.xaml
+    /// </summary>
+    public partial class Authorization : Window
     {
-    }
+        // Data needed for authorization
+        private string _login;
+        private string _password;
+        private bool _isLoggedIn;
+        private bool _isAuthenticated;
 
-    private void Button_Click(object sender, RoutedEventArgs e)
-    {
-        _login = login_box.Text;
-        _password = password_box.Password;
-        _password = Hash.Hash.hashPassword(_password);
+        public Authorization()
+        {
+        }
 
-        // TODO: check if password is correct
-        // For now just a simple check
+        public void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _login = login_box.Text;
+            _password = password_box.Password;
+            _password = Hash.Hash.hashPassword(_password);
+
+            // TODO: check if password is correct
+            // For now just a simple check
+            if (_login.Length > 0)
+            {
+                MessageBox.Show("Success!");
+            }
+        }
+
+        public bool Autorize(string login, string password)
+        {
+            if (_login.Length > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void password_box_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext != null)
+            {
+                ((dynamic)this.DataContext).Password = 
+            }
+        }
     }
-}
 }
