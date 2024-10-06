@@ -15,16 +15,21 @@ namespace cargo_transportation
         private string _password;
         public bool isAuthorized = false;
         private string filename = "Databases\\users.db";
+        private Database _database;
+        
         public User user;
-        private SQLiteConnection con;
 
         public AuthForm()
         {
             InitializeComponent();
-            con = DatabaseWorker.Connect(filename);
-            if (con == null)
+
+            _database = new Database(filename);
+            _database.Connect();
+            
+            if (_database.Connection == null)
             {
-                throw new Exception("Не удалось установить соединение с базой данных пользователей");
+                MessageBox.Show($"Ошибка доступа к базе данных.");
+                // TODO: create new Users database if one is absent
             }
         }
 
@@ -34,25 +39,23 @@ namespace cargo_transportation
             {
                 do
                 {
-                    SQLiteCommand cmd = new SQLiteCommand();
-                    DataTable dt = new DataTable();
-                    cmd.CommandText = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
-                    cmd.Connection = con;
-                    SQLiteDataAdapter da = DatabaseWorker.GetDataAdapter(dt, cmd);
-
-                    var reader = cmd.ExecuteReader();
+                    var dt = new DataTable();
+                    // TODO: there's no need for table name you dumbass
+                    _database.Command = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
+                    var da = _database.GetDataAdapter(dt);
+                    
                     string username = "", password = "";
                     bool readRight = false, writeRight = false, editRight = false, deleteRight = false;
-                    if (reader.HasRows)
+                    
+                    if (dt.Rows.Count > 0)
                     {
-                        reader.Read();
-                        username = reader.GetString(1);
-                        password = reader.GetString(2);
-                        readRight = reader.GetBoolean(3);
-                        writeRight = reader.GetBoolean(4);
-                        editRight = reader.GetBoolean(5);
-                        deleteRight = reader.GetBoolean(6);
-                        reader.Close();
+                        // TODO: beautify
+                        username = dt.Rows[0][1].ToString();
+                        password = dt.Rows[0][2].ToString();
+                        Boolean.TryParse(dt.Rows[0][3].ToString(), out readRight);
+                        Boolean.TryParse(dt.Rows[0][4].ToString(), out writeRight);
+                        Boolean.TryParse(dt.Rows[0][5].ToString(), out editRight);
+                        Boolean.TryParse(dt.Rows[0][6].ToString(), out deleteRight);
                     }
                     else
                     {
@@ -60,11 +63,10 @@ namespace cargo_transportation
                         break;
                         // TODO: handle if user is not in the database
                     }
-
-                    cmd.Dispose();
+                    _database.Clear();
                     dt.Dispose();
                     da.Dispose();
-                    reader.Dispose();
+                    //reader.Dispose();
 
 
                     if (username.Equals(_login) && password.Equals(_password))
@@ -92,13 +94,12 @@ namespace cargo_transportation
         private void registerButton_Click(object sender, EventArgs e)
         {
             // TODO: register function
-            SQLiteCommand cmd = new SQLiteCommand();
-            DataTable dt = new DataTable();
-            cmd.CommandText = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
-            cmd.Connection = con;
-            SQLiteDataAdapter da = DatabaseWorker.GetDataAdapter(dt, cmd);
+            var dt = new DataTable();
+            _database.Command = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
+            var da = _database.GetDataAdapter(dt);
 
-            var reader = cmd.ExecuteReader();
+            var reader = _database.ReadData();
+            
             if (reader.HasRows)
             {
                 ErrorHandler.DuplicateLoginError();
@@ -108,7 +109,7 @@ namespace cargo_transportation
             {
                 do
                 {
-                    if (_login.Length < 5)
+                    if (_login == null || _login.Length < 5)
                     {
                         ErrorHandler.LoginLengthError();
                         break;
@@ -121,9 +122,11 @@ namespace cargo_transportation
                     }
 
                     reader.Close();
-                    cmd.CommandText = "INSERT INTO Users (Username, Password, Read, Write, Edit, Del)" + $"VALUES ('{_login}', '{_password}', '{1}', '{0}', '{0}', '{0}');";
-                    if (cmd.ExecuteNonQuery() == 1)
+                    _database.Command = "INSERT INTO Users (Username, Password, Read, Write, Edit, Del)" + $"VALUES ('{_login}', '{_password}', '{1}', '{0}', '{0}', '{0}');";
+                    int result = _database.ExecuteCommand();
+                    if (result == 1)
                     {
+                        _database.Connection.Dispose();
                         MessageBox.Show("Регистрация прошла успешно!", "Регистрация");
                         isAuthorized = true;
                         user = new User(_login, _password, true, false, false, false);
@@ -132,7 +135,7 @@ namespace cargo_transportation
                 } while (false);
             }
 
-            cmd.Dispose();
+            _database.Clear();
             da.Dispose();
 
         }

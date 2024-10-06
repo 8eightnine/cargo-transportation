@@ -29,7 +29,6 @@ namespace cargo_transportation
                 User user = authForm.user;
                 Application.Run( new MainForm(user));
             }
-
         }
     }
 }

@@ -94,7 +94,7 @@
             // 
             this.registerLabel.AutoSize = true;
             this.registerLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.registerLabel.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.registerLabel.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.registerLabel.Location = new System.Drawing.Point(63, 114);
             this.registerLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.registerLabel.Name = "registerLabel";
@@ -180,7 +180,7 @@
             // 
             this.switchToLoginLabel.AutoSize = true;
             this.switchToLoginLabel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.switchToLoginLabel.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.switchToLoginLabel.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.switchToLoginLabel.Location = new System.Drawing.Point(47, 114);
             this.switchToLoginLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.switchToLoginLabel.Name = "switchToLoginLabel";
@@ -232,12 +232,12 @@
             // 
             // registerButton
             // 
-            this.registerButton.Location = new System.Drawing.Point(77, 136);
+            this.registerButton.Location = new System.Drawing.Point(60, 136);
             this.registerButton.Margin = new System.Windows.Forms.Padding(2);
             this.registerButton.Name = "registerButton";
-            this.registerButton.Size = new System.Drawing.Size(93, 23);
+            this.registerButton.Size = new System.Drawing.Size(130, 23);
             this.registerButton.TabIndex = 9;
-            this.registerButton.Text = "Войти";
+            this.registerButton.Text = "Зарегистрироваться";
             this.registerButton.UseVisualStyleBackColor = true;
             this.registerButton.Click += new System.EventHandler(this.registerButton_Click);
             // 
@@ -246,11 +246,13 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(214, 159);
+            this.ClientSize = new System.Drawing.Size(214, 161);
             this.Controls.Add(this.tabControl);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(230, 200);
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(230, 200);
             this.Name = "AuthForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
