@@ -1,49 +1,59 @@
 ﻿namespace cargo_transportation.Classes
 {
-    internal class User
+    public class User
     {
         private string _login;
         private string _password;
         private bool _read;
         private bool _write;
-        private bool _gagaga;
-        private bool _jujuju;
+        private bool _edit;
+        private bool _delete;
+
+        public User(string login, string password, bool r, bool w, bool e, bool d)
+        {
+            _login = login;
+            _password = password;
+            _read = r;
+            _write = w;
+            _edit = e;
+            _delete = d;
+        }
 
         public string Password
         {
             set
             {
-                this.Password = Hash.Hash.hashPassword(value);
+                Password = Hash.Hash.hashPassword(value);
             }
         }
         public string Login
         {
-            get { return this._login; }
+            get { return _login; }
         }
 
         public bool Read
         {
-            get { return this._read; }
-            set { this._read = value; }
+            get { return _read; }
+            set { _read = value; }
         }
         public bool Write
         {
-            get { return this._write; }
-            set { this._write = value; }
+            get { return _write; }
+            set { _write = value; }
         }
-        public bool Gagaga
+        public bool Edit
         {
-            get { return this._gagaga; }
+            get { return _edit; }
             set
             {
-                this._gagaga = value;
+                _edit = value;
             }
         }
 
-        public bool Jujuju
+        public bool Delete
         {
-            get { return this._jujuju; }
-            set { this._jujuju = value; }
+            get { return _delete; }
+            set { _delete = value; }
         }
     }
 }

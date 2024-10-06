@@ -1,4 +1,5 @@
-﻿using System;
+﻿using cargo_transportation.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,15 +9,27 @@ namespace cargo_transportation
 {
     internal static class Program
     {
-        /// <summary>
-        /// Главная точка входа для приложения.
-        /// </summary>
         [STAThread]
         static void Main()
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AuthForm());
+            AuthForm authForm = new AuthForm();
+            try
+            {
+                Application.Run(authForm);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка");
+            }
+
+            if (authForm.isAuthorized == true)
+            {
+                User user = authForm.user;
+                Application.Run( new MainForm(user));
+            }
+
         }
     }
 }
