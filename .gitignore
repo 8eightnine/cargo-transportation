@@ -385,3 +385,8 @@ InteropTests/NativeTests/out
 # 'git update-index --assume-unchanged <filename>' will allow ignoring changes for tracked files.
 **/ScratchProject/
 **/ScratchProjectWithInternals/
+/obj/Debug/cargo-transportation.csproj.AssemblyReference.cache
+/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/Classes/ProgramMenu.cs
+/.vs/*
+/.vs/cargo-transportation/v17/.suo
