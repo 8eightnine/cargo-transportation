@@ -91,6 +91,7 @@
     <Compile Include="Classes\Database.cs" />
     <Compile Include="Classes\ErrorHandler.cs" />
     <Compile Include="Classes\Hash.cs" />
+    <Compile Include="Classes\ProgramMenu.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

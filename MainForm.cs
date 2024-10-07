@@ -18,37 +18,27 @@ namespace cargo_transportation
         public MainForm(User user)
         {
             _database = new Database("Databases\\db.db");
+            _database.Connect();
             currentUser = user;
             InitializeComponent();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            ProgramMenu menu = new ProgramMenu();
             usernameLabel.Text = "Добро пожаловать, " + currentUser.Login + "!";
             ChangeStatusStrip(_database.Status);
-            //FillToolStrip();
+            ToolStripItemCollection temp = menu.Populate();
+            for(int i = 0; i < temp.Count; i++)
+            {
+                toolStrip.Items.Add(temp[i]);
+            }
+            
         }
 
         private void ChangeStatusStrip(string status)
         {
             databaseStatusLabel.Text = "Статус базы данных: " + status;
         }
-
-        private void FillToolStrip()
-        {
-            Database temp = new Database("Databases\\menu.db");
-            temp.Connect();
-
-            temp.Command = "SELECT * FROM Section";
-            var dt = new DataTable();
-            var da = temp.GetDataAdapter(dt);
-            var reader = _database.ReadData();
-
-            foreach (DataRow dr in dt.Rows)
-            {
-                reader.GetInt64(0);
-            }
-        }
-
     }
 }
