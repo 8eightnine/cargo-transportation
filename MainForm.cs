@@ -29,7 +29,8 @@ namespace cargo_transportation
             usernameLabel.Text = "Добро пожаловать, " + currentUser.Login + "!";
             ChangeStatusStrip(_database.Status);
             ToolStripItemCollection temp = menu.Populate();
-            for(int i = 0; i < temp.Count; i++)
+            int size = temp.Count;
+            for(int i = size - 1; i >= 0; i--)
             {
                 toolStrip.Items.Add(temp[i]);
             }
