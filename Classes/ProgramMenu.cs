@@ -16,7 +16,6 @@ namespace cargo_transportation.Classes
             Database temp = new Database("Databases\\menu.db");
             DataTable dt = new DataTable();
             temp.Connect();
-
             temp.Command = "SELECT * FROM Menu";
             temp.GetDataAdapter(dt);
             int rowsCount = dt.Rows.Count;
@@ -73,7 +72,7 @@ namespace cargo_transportation.Classes
             }
             var result = (from i in toolStripItems orderby -Int64.Parse(i.ToolTipText) select i).ToList();
 
-            ToolStrip strip = new ToolStrip();
+            MenuStrip strip = new MenuStrip();
             for (int i = 0; i < toolStripItems.Count(); i++)
             {
                 strip.Items.Add(result[i]);
@@ -88,19 +87,27 @@ namespace cargo_transportation.Classes
             ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
 
             var values = clickedItem.Name.ToString().Split('-');
-            
+
 
             switch (values[0])
             {
                 case "About":
                     {
-                        //TODO: make this shit work
-                        MessageBox.Show("Test: " + clickedItem.Tag);
+                        //TODO: make this work
+                        MessageBox.Show("Test: clicked?");
                         break;
                     }
                 case "Orders":
                     {
                         MessageBox.Show("Test: " + clickedItem.Tag);
+                        break;
+                    }
+                case "Trips":
+                    {
+                        break;
+                    }
+                case "Drivers":
+                    {
                         break;
                     }
                 default:

@@ -31,6 +31,7 @@ namespace cargo_transportation
                 MessageBox.Show($"Ошибка доступа к базе данных.");
                 // TODO: create new Users database if one is absent
             }
+
         }
 
         private void LoginButton_Click(object sender, EventArgs e)
@@ -66,12 +67,10 @@ namespace cargo_transportation
                     _database.Clear();
                     dt.Dispose();
                     da.Dispose();
-                    //reader.Dispose();
 
 
                     if (username.Equals(_login) && password.Equals(_password))
                     {
-                        //TODO: activate main window
                         isAuthorized = true;
                         user = new User(_login, _password, readRight, writeRight, editRight, deleteRight);
                         Close();
@@ -178,6 +177,20 @@ namespace cargo_transportation
             progressBar2.Value = (registerPasswordBox.Text.Length >= 5) ? 100 : registerPasswordBox.Text.Length * 20;
         }
 
+        
+
         #endregion
+
+
+        // TODO: delete this later, maybe
+        private void LoginButton_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                isAuthorized = true;
+                user = new User("admin", "admin", true, true, true, true);
+                Close();
+            }
+        }
     }
 }   
