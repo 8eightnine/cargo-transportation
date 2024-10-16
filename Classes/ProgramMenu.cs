@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace cargo_transportation.Classes
@@ -85,6 +82,7 @@ namespace cargo_transportation.Classes
         private void MenuItemClickHandler(object sender, EventArgs e)
         {
             ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
+            MenuStrip strip = (MenuStrip)clickedItem.Owner;
 
             var values = clickedItem.Name.ToString().Split('-');
 
@@ -94,12 +92,30 @@ namespace cargo_transportation.Classes
                 case "About":
                     {
                         //TODO: make this work
+<<<<<<< HEAD
                         MessageBox.Show("Test: " + clickedItem.Name);
+=======
+                        Assembly asm = Assembly.LoadFrom("About.dll");
+                        var type = asm.GetTypes();
+                        MessageBox.Show(type.Length.ToString());
+                        //MessageBox.Show(type.Name);
+                        //foreach (MethodInfo minf in type.GetMethods())
+                        //{
+                        //    MessageBox.Show(minf.Name);
+                        //}
+                        //Type t = asm.GetType("About");
+                        
+                        //MethodInfo square = t.GetMethod("ShowAbout", BindingFlags.NonPublic | BindingFlags.Static);
+                        //object result = square?.Invoke(null, new object[] { strip.Parent });
+>>>>>>> 106572d646376d9817d52650117a1a3e1616d24d
                         break;
                     }
                 case "Orders":
                     {
+<<<<<<< HEAD
                         MessageBox.Show("Test: " + clickedItem.Name);
+=======
+>>>>>>> 106572d646376d9817d52650117a1a3e1616d24d
                         break;
                     }
                 case "Trips":
@@ -123,7 +139,5 @@ namespace cargo_transportation.Classes
                     }
             }
         }
-
-
     }
 }

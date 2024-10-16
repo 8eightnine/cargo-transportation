@@ -91,6 +91,7 @@
     <Compile Include="Classes\Database.cs" />
     <Compile Include="Classes\ErrorHandler.cs" />
     <Compile Include="Classes\Hash.cs" />
+    <Compile Include="Classes\LibInvoke.cs" />
     <Compile Include="Classes\ProgramMenu.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="MainForm.cs">
@@ -127,13 +128,6 @@
       <DependentUpon>TEMP.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
-    <None Include="Properties\DataSources\AuthForm.datasource" />
-    <None Include="Properties\DataSources\cargo_transportation.Classes.DatabaseWorker.datasource" />
-    <None Include="Properties\DataSources\cargo_transportation.Classes.Hash.Hash.datasource" />
-    <None Include="Properties\DataSources\cargo_transportation.Classes.User.datasource" />
-    <None Include="Properties\DataSources\cargo_transportation.Properties.Resources.datasource" />
-    <None Include="Properties\DataSources\cargo_transportation.Properties.Settings.datasource" />
-    <None Include="Properties\DataSources\Program.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

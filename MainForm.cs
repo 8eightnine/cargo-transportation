@@ -40,32 +40,13 @@ namespace cargo_transportation
                 menuStrip1.Items.Add(temp[i]);
             }
 
-            menuStrip1.Items[0].PerformClick();
+            menuStrip1.Items[3].PerformClick();
             _currentModule = menuStrip1.Items[0].Name;
         }
 
         private void ChangeStatusStrip(string status)
         {
             databaseStatusLabel.Text = "Статус базы данных: " + status;
-        }
-
-        public static void InvokeStringMethod(string typeName, string methodName, Form form)
-        {
-            // Get the Type for the class
-            Type calledType = Type.GetType(typeName);
-
-            // Invoke the method itself. The string returned by the method winds up in s.
-            // Note that stringParam is passed via the last parameter of InvokeMember,
-            // as an array of Objects.
-            calledType.InvokeMember(
-                            methodName,
-                            BindingFlags.InvokeMethod | BindingFlags.Public |
-                                BindingFlags.Static,
-                            null,
-                            null,
-                            new Object[] { form });
-
-            
         }
     }
 }
