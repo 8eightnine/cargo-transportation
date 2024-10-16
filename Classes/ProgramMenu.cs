@@ -94,20 +94,27 @@ namespace cargo_transportation.Classes
                 case "About":
                     {
                         //TODO: make this work
-                        MessageBox.Show("Test: clicked?");
+                        MessageBox.Show("Test: " + clickedItem.Name);
                         break;
                     }
                 case "Orders":
                     {
-                        MessageBox.Show("Test: " + clickedItem.Tag);
+                        MessageBox.Show("Test: " + clickedItem.Name);
                         break;
                     }
                 case "Trips":
                     {
+                        MessageBox.Show("Test: " + clickedItem.Name);
                         break;
                     }
                 case "Drivers":
                     {
+                        MessageBox.Show("Test: " + clickedItem.Name);
+                        break;
+                    }
+                case "CompanyClients":
+                    {
+                        MessageBox.Show("Test: " + clickedItem.Name);
                         break;
                     }
                 default:
