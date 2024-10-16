@@ -387,4 +387,5 @@ InteropTests/NativeTests/out
 **/ScratchProjectWithInternals/
 /obj/Debug/cargo-transportation.csproj.AssemblyReference.cache
 /obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
-/.vs/*
+.vs/
+.vs/cargo-transportation/DesignTimeBuild/

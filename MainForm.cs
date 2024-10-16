@@ -18,7 +18,7 @@ namespace cargo_transportation
         private Database _database;
         private DataTable _dataTable;
         private string _currentModule;
-        private ControlCollection _defaultControls;
+        public ToolStripItemCollection DefaultControls;
 
         public MainForm(User user)
         {
@@ -39,9 +39,10 @@ namespace cargo_transportation
             {
                 menuStrip1.Items.Add(temp[i]);
             }
+            DefaultControls = menu.Populate();
 
-            menuStrip1.Items[3].PerformClick();
-            _currentModule = menuStrip1.Items[0].Name;
+            //menuStrip1.Items[3].PerformClick();
+            //_currentModule = menuStrip1.Items[0].Name;
         }
 
         private void ChangeStatusStrip(string status)

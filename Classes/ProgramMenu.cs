@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
@@ -91,31 +92,27 @@ namespace cargo_transportation.Classes
             {
                 case "About":
                     {
-                        //TODO: make this work
-<<<<<<< HEAD
-                        MessageBox.Show("Test: " + clickedItem.Name);
-=======
-                        Assembly asm = Assembly.LoadFrom("About.dll");
-                        var type = asm.GetTypes();
-                        MessageBox.Show(type.Length.ToString());
-                        //MessageBox.Show(type.Name);
-                        //foreach (MethodInfo minf in type.GetMethods())
-                        //{
-                        //    MessageBox.Show(minf.Name);
-                        //}
-                        //Type t = asm.GetType("About");
-                        
-                        //MethodInfo square = t.GetMethod("ShowAbout", BindingFlags.NonPublic | BindingFlags.Static);
-                        //object result = square?.Invoke(null, new object[] { strip.Parent });
->>>>>>> 106572d646376d9817d52650117a1a3e1616d24d
+                        //TODO: make this prettier
+                        Assembly asm = Assembly.LoadFrom("AboutLibrary.dll");
+                        Type t = asm.GetType("AboutLibrary.About");
+                        MethodInfo square = t.GetMethod("ShowAbout");
+                        Form prnt = (Form)strip.Parent;
+                        object result = square?.Invoke(null, new object[] { prnt });
+                        var temp = this.Populate();
+                        prnt.SuspendLayout();
+                        MenuStrip cts = new MenuStrip();
+                        for (int i = temp.Count - 1; i >= 0; i--)
+                        {
+                            cts.Items.Add(temp[i]);
+                        }
+                        prnt.Controls.Add(cts);
+                        prnt.MainMenuStrip = cts;
+                        prnt.ResumeLayout();
                         break;
                     }
                 case "Orders":
                     {
-<<<<<<< HEAD
                         MessageBox.Show("Test: " + clickedItem.Name);
-=======
->>>>>>> 106572d646376d9817d52650117a1a3e1616d24d
                         break;
                     }
                 case "Trips":
