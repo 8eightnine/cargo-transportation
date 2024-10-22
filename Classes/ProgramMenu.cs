@@ -26,7 +26,7 @@ namespace cargo_transportation.Classes
                 if (Int64.Parse(dr["ParentID"].ToString()) == 0)
                 {
                     ToolStripMenuItem tsmi = new ToolStripMenuItem();
-                    // TODO: Fix this shit! Or make a parser
+                    // TODO: Fix this or make a parser
                     tsmi.Name = dr["LibraryName"].ToString() + "-" + dr["Function"].ToString();
                     tsmi.Text = dr["Name"].ToString();
                     tsmi.Tag = dr["ID"].ToString();
@@ -83,58 +83,9 @@ namespace cargo_transportation.Classes
         private void MenuItemClickHandler(object sender, EventArgs e)
         {
             ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
-            MenuStrip strip = (MenuStrip)clickedItem.Owner;
-
+            var strip = clickedItem.Owner;
             var values = clickedItem.Name.ToString().Split('-');
-
-
-            switch (values[0])
-            {
-                case "About":
-                    {
-                        //TODO: make this prettier
-                        Assembly asm = Assembly.LoadFrom("AboutLibrary.dll");
-                        Type t = asm.GetType("AboutLibrary.About");
-                        MethodInfo square = t.GetMethod("ShowAbout");
-                        Form prnt = (Form)strip.Parent;
-                        object result = square?.Invoke(null, new object[] { prnt });
-                        var temp = this.Populate();
-                        prnt.SuspendLayout();
-                        MenuStrip cts = new MenuStrip();
-                        for (int i = temp.Count - 1; i >= 0; i--)
-                        {
-                            cts.Items.Add(temp[i]);
-                        }
-                        prnt.Controls.Add(cts);
-                        prnt.MainMenuStrip = cts;
-                        prnt.ResumeLayout();
-                        break;
-                    }
-                case "Orders":
-                    {
-                        MessageBox.Show("Test: " + clickedItem.Name);
-                        break;
-                    }
-                case "Trips":
-                    {
-                        MessageBox.Show("Test: " + clickedItem.Name);
-                        break;
-                    }
-                case "Drivers":
-                    {
-                        MessageBox.Show("Test: " + clickedItem.Name);
-                        break;
-                    }
-                case "CompanyClients":
-                    {
-                        MessageBox.Show("Test: " + clickedItem.Name);
-                        break;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }
+            LibInvoke.InvokeFunction(values[0], values[1], (Form)strip.Parent);
         }
     }
 }

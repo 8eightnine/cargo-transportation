@@ -2,9 +2,7 @@
 using cargo_transportation.Classes.Hash;
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Data.SQLite;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace cargo_transportation
@@ -41,7 +39,6 @@ namespace cargo_transportation
                 do
                 {
                     var dt = new DataTable();
-                    // TODO: there's no need for table name you dumbass
                     _database.Command = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
                     var da = _database.GetDataAdapter(dt);
                     
@@ -62,7 +59,6 @@ namespace cargo_transportation
                     {
                         ErrorHandler.CredentialsError();
                         break;
-                        // TODO: handle if user is not in the database
                     }
                     _database.Clear();
                     dt.Dispose();
@@ -83,7 +79,7 @@ namespace cargo_transportation
                 } while (false);
 
             }
-            catch ( SQLiteException ex)
+            catch (SQLiteException ex)
             {
                 MessageBox.Show(ex.Message);
                 //TODO: handle exception
@@ -92,7 +88,6 @@ namespace cargo_transportation
 
         private void registerButton_Click(object sender, EventArgs e)
         {
-            // TODO: register function
             var dt = new DataTable();
             _database.Command = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
             var da = _database.GetDataAdapter(dt);
