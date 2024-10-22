@@ -12,24 +12,12 @@ namespace cargo_transportation
         private string _login;
         private string _password;
         public bool isAuthorized = false;
-        private string filename = "Databases\\users.db";
-        private Database _database;
         
         public User user;
 
         public AuthForm()
         {
             InitializeComponent();
-
-            _database = new Database(filename);
-            _database.Connect();
-            
-            if (_database.Connection == null)
-            {
-                MessageBox.Show($"Ошибка доступа к базе данных.");
-                // TODO: create new Users database if one is absent
-            }
-
         }
 
         private void LoginButton_Click(object sender, EventArgs e)
@@ -39,9 +27,16 @@ namespace cargo_transportation
                 do
                 {
                     var dt = new DataTable();
-                    _database.Command = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
-                    var da = _database.GetDataAdapter(dt);
-                    
+                    using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\users.db';Version=3; FailIfMissing=False"))
+                    {
+                        using (SQLiteCommand cmd = connection.CreateCommand())
+                        { 
+                            cmd.CommandText = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
+                            SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+                            da.Fill(dt);
+                        }
+                    }
+
                     string username = "", password = "";
                     bool readRight = false, writeRight = false, editRight = false, deleteRight = false;
                     
@@ -60,9 +55,8 @@ namespace cargo_transportation
                         ErrorHandler.CredentialsError();
                         break;
                     }
-                    _database.Clear();
+
                     dt.Dispose();
-                    da.Dispose();
 
 
                     if (username.Equals(_login) && password.Equals(_password))
@@ -89,15 +83,20 @@ namespace cargo_transportation
         private void registerButton_Click(object sender, EventArgs e)
         {
             var dt = new DataTable();
-            _database.Command = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
-            var da = _database.GetDataAdapter(dt);
-
-            var reader = _database.ReadData();
             
-            if (reader.HasRows)
+            using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\test.db';Version=3; FailIfMissing=False"))
+            {
+                using (SQLiteCommand cmd = connection.CreateCommand())
+                {
+                    cmd.CommandText = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
+                    SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+
+            if (dt.Rows.Count > 0)
             {
                 ErrorHandler.DuplicateLoginError();
-                reader.Close();
             }
             else
             {
@@ -115,22 +114,22 @@ namespace cargo_transportation
                         break;
                     }
 
-                    reader.Close();
-                    _database.Command = "INSERT INTO Users (Username, Password, Read, Write, Edit, Del)" + $"VALUES ('{_login}', '{_password}', '{1}', '{0}', '{0}', '{0}');";
-                    int result = _database.ExecuteCommand();
-                    if (result == 1)
+                    using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\test.db';Version=3; FailIfMissing=False"))
                     {
-                        _database.Connection.Dispose();
-                        MessageBox.Show("Регистрация прошла успешно!", "Регистрация");
-                        isAuthorized = true;
-                        user = new User(_login, _password, true, false, false, false);
-                        Close();
+                        using (SQLiteCommand cmd = connection.CreateCommand())
+                        {
+                            cmd.CommandText = "INSERT INTO Users (Username, Password, Read, Write, Edit, Del)" + $"VALUES ('{_login}', '{_password}', '{1}', '{0}', '{0}', '{0}');";
+                            cmd.ExecuteNonQuery();
+                        }
                     }
+
+                    MessageBox.Show("Регистрация прошла успешно!", "Регистрация");
+                    isAuthorized = true;
+                    user = new User(_login, _password, true, false, false, false);
+                    Close();
+
                 } while (false);
             }
-
-            _database.Clear();
-            da.Dispose();
 
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace cargo_transportation.Classes
@@ -13,8 +12,15 @@ namespace cargo_transportation.Classes
             {
                 Assembly asm = Assembly.LoadFrom(dllName + ".dll");
                 Type t = asm.GetType(dllName + "." + dllName);
-                MethodInfo square = t.GetMethod(functionName);
-                object result = square?.Invoke(null, new object[] { prnt });
+                if (t != null)
+                {
+                    MethodInfo square = t.GetMethod(functionName);
+                    object result = square?.Invoke(null, new object[] { prnt });
+                }
+                else
+                {
+                    throw new Exception("Отсутствует класс");
+                }
             }
             catch (Exception ex)
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SQLite;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -15,15 +16,12 @@ namespace cargo_transportation
     public partial class MainForm : Form
     {
         private User currentUser;
-        private Database _database;
         private DataTable _dataTable;
         private string _currentModule;
         public ToolStripItemCollection DefaultControls;
 
         public MainForm(User user)
         {
-            _database = new Database("Databases\\db.db");
-            _database.Connect();
             currentUser = user;
             InitializeComponent();
         }
@@ -32,7 +30,6 @@ namespace cargo_transportation
         {
             ProgramMenu menu = new ProgramMenu();
             usernameLabel.Text = "Добро пожаловать, " + currentUser.Login + "!";
-            ChangeStatusStrip(_database.Status);
             ToolStripItemCollection temp = menu.Populate();
             int size = temp.Count;
             for (int i = size - 1; i >= 0; i--)
@@ -41,8 +38,26 @@ namespace cargo_transportation
             }
             DefaultControls = menu.Populate();
 
-            //menuStrip1.Items[3].PerformClick();
-            //_currentModule = menuStrip1.Items[0].Name;
+            // TODO: wrap it into a click
+            DataTable dt = new DataTable();
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\test.db';Version=3; FailIfMissing=False"))
+                {
+                    using (SQLiteCommand cmd = connection.CreateCommand())
+                    {
+                        cmd.CommandText = "SELECT * FROM 'Order'";
+                        SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
+                        adapter.Fill(dt);
+                    }
+                }
+            }
+            catch (Exception ex) 
+            {
+                MessageBox.Show(ex.Message);
+            }
+            dataGridView1.DataSource = dt;
+            dataGridView1.Refresh();
         }
 
         private void ChangeStatusStrip(string status)
