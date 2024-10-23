@@ -88,6 +88,7 @@
     <Compile Include="AuthForm.Designer.cs">
       <DependentUpon>AuthForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Database.cs" />
     <Compile Include="Classes\ErrorHandler.cs" />
     <Compile Include="Classes\Hash.cs" />
     <Compile Include="Classes\LibInvoke.cs" />

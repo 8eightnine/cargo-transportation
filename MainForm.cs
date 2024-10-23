@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Data.SQLite;
 using System.Drawing;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using cargo_transportation.Classes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace cargo_transportation
 {
@@ -38,31 +40,11 @@ namespace cargo_transportation
             }
             DefaultControls = menu.Populate();
 
-            // TODO: wrap it into a click
             DataTable dt = new DataTable();
-            try
-            {
-                using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\test.db';Version=3; FailIfMissing=False"))
-                {
-                    using (SQLiteCommand cmd = connection.CreateCommand())
-                    {
-                        cmd.CommandText = "SELECT * FROM 'Order'";
-                        SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
-                        adapter.Fill(dt);
-                    }
-                }
-            }
-            catch (Exception ex) 
-            {
-                MessageBox.Show(ex.Message);
-            }
+            Classes.Database.ReadData("Databases\\test.db", "SELECT * FROM 'Order'", dt);
+            
             dataGridView1.DataSource = dt;
             dataGridView1.Refresh();
-        }
-
-        private void ChangeStatusStrip(string status)
-        {
-            databaseStatusLabel.Text = "Статус базы данных: " + status;
         }
     }
 }

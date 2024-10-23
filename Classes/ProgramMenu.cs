@@ -14,82 +14,65 @@ namespace cargo_transportation.Classes
         public ToolStripItemCollection Populate()
         {
             DataTable dt = new DataTable();
-            try
+            Database.ReadData("Databases\\menu.db", "SELECT * FROM Menu", dt);
+
+             int rowsCount = dt.Rows.Count;
+            var parentValues = dt.AsEnumerable().Where(x => x["ParentID"].ToString().Equals("0"));
+            var childValues = dt.AsEnumerable().Where(x => x["ParentID"].ToString() != "0");
+            ToolStripMenuItem[] toolStripItems = new ToolStripMenuItem[rowsCount + 1];
+
+            foreach (DataRow dr in dt.Rows)
             {
-                using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\menu.db';Version=3; FailIfMissing=False"))
+                if (Int64.Parse(dr["ParentID"].ToString()) == 0)
                 {
-                    using (SQLiteCommand cmd = connection.CreateCommand())
-                    {
-                        cmd.CommandText = "SELECT * FROM Menu";
-                        SQLiteDataAdapter adapter = new SQLiteDataAdapter(cmd);
-                        
-                        adapter.Fill(dt);
-                        
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-                int rowsCount = dt.Rows.Count;
-                var parentValues = dt.AsEnumerable().Where(x => x["ParentID"].ToString().Equals("0"));
-                var childValues = dt.AsEnumerable().Where(x => x["ParentID"].ToString() != "0");
-                ToolStripMenuItem[] toolStripItems = new ToolStripMenuItem[rowsCount + 1];
-
-                foreach (DataRow dr in dt.Rows)
-                {
-                    if (Int64.Parse(dr["ParentID"].ToString()) == 0)
-                    {
-                        ToolStripMenuItem tsmi = new ToolStripMenuItem();
-                        tsmi.Name = dr["LibraryName"].ToString() + "-" + dr["Function"].ToString();
-                        tsmi.Text = dr["Name"].ToString();
-                        tsmi.Tag = dr["ID"].ToString();
-                        tsmi.ToolTipText = dr["Order"].ToString();
-                        if (!tsmi.Tag.Equals("NULL"))
-                            tsmi.Click += new EventHandler(MenuItemClickHandler);
-
-                        toolStripItems[Int64.Parse(dr["ID"].ToString())] = tsmi;
-                    }
-
-                }
-
-                foreach (DataRow dr in dt.Rows)
-                {
-                    if (Int64.Parse(dr["ParentID"].ToString()) != 0)
-                    {
-                        ToolStripMenuItem tsmi = new ToolStripMenuItem();
-
-                        tsmi.Name = dr["LibraryName"].ToString();
-                        tsmi.Text = dr["Name"].ToString();
-                        tsmi.Tag = dr["Function"].ToString();
-                        tsmi.ToolTipText = dr["Order"].ToString();
+                    ToolStripMenuItem tsmi = new ToolStripMenuItem();
+                    tsmi.Name = dr["LibraryName"].ToString() + "-" + dr["Function"].ToString();
+                    tsmi.Text = dr["Name"].ToString();
+                    tsmi.Tag = dr["ID"].ToString();
+                    tsmi.ToolTipText = dr["Order"].ToString();
+                    if (!tsmi.Tag.Equals("NULL"))
                         tsmi.Click += new EventHandler(MenuItemClickHandler);
-                        var test = toolStripItems[Int64.Parse(dr["ParentID"].ToString())].DropDownItems.Add(tsmi);
-                    }
+
+                    toolStripItems[Int64.Parse(dr["ID"].ToString())] = tsmi;
                 }
 
-                toolStripItems = toolStripItems.Where(item => item != null).ToArray();
+            }
 
-                foreach (ToolStripMenuItem tsmi in toolStripItems)
+            foreach (DataRow dr in dt.Rows)
+            {
+                if (Int64.Parse(dr["ParentID"].ToString()) != 0)
                 {
-                    var orderedItems = tsmi.DropDownItems.Cast<ToolStripMenuItem>()
-                    .OrderByDescending(item => -Int32.Parse(item.ToolTipText))
-                    .ToList();
-                    tsmi.DropDownItems.Clear();
-                    foreach (var item in orderedItems)
-                    {
-                        tsmi.DropDownItems.Add(item);
-                    }
-                }
-                var result = (from i in toolStripItems orderby -Int64.Parse(i.ToolTipText) select i).ToList();
+                    ToolStripMenuItem tsmi = new ToolStripMenuItem();
 
-                MenuStrip strip = new MenuStrip();
-                for (int i = 0; i < toolStripItems.Count(); i++)
-                {
-                    strip.Items.Add(result[i]);
+                    tsmi.Name = dr["LibraryName"].ToString();
+                    tsmi.Text = dr["Name"].ToString();
+                    tsmi.Tag = dr["Function"].ToString();
+                    tsmi.ToolTipText = dr["Order"].ToString();
+                    tsmi.Click += new EventHandler(MenuItemClickHandler);
+                    var test = toolStripItems[Int64.Parse(dr["ParentID"].ToString())].DropDownItems.Add(tsmi);
                 }
+            }
+
+            toolStripItems = toolStripItems.Where(item => item != null).ToArray();
+
+            foreach (ToolStripMenuItem tsmi in toolStripItems)
+            {
+                var orderedItems = tsmi.DropDownItems.Cast<ToolStripMenuItem>()
+                .OrderByDescending(item => -Int32.Parse(item.ToolTipText))
+                .ToList();
+                tsmi.DropDownItems.Clear();
+                foreach (var item in orderedItems)
+                {
+                    tsmi.DropDownItems.Add(item);
+                }
+            }
+            var result = (from i in toolStripItems orderby -Int64.Parse(i.ToolTipText) select i).ToList();
+
+            MenuStrip strip = new MenuStrip();
+            for (int i = 0; i < toolStripItems.Count(); i++)
+            {
+                strip.Items.Add(result[i]);
+            }
 
             dt.Dispose();
             return strip.Items;
