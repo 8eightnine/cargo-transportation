@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using cargo_transportation.Classes;
+using System;
 using System.Data;
-using System.Data.Entity;
-using System.Data.SQLite;
-using System.Drawing;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using cargo_transportation.Classes;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace cargo_transportation
 {
@@ -31,7 +21,6 @@ namespace cargo_transportation
         private void MainForm_Load(object sender, EventArgs e)
         {
             ProgramMenu menu = new ProgramMenu();
-            usernameLabel.Text = "Добро пожаловать, " + currentUser.Login + "!";
             ToolStripItemCollection temp = menu.Populate();
             int size = temp.Count;
             for (int i = size - 1; i >= 0; i--)
@@ -45,6 +34,12 @@ namespace cargo_transportation
             
             dataGridView1.DataSource = dt;
             dataGridView1.Refresh();
+        }
+
+        private void addNewEntryButton_Click(object sender, EventArgs e)
+        {
+            TEMP temp = new TEMP();
+            temp.Show();
         }
     }
 }

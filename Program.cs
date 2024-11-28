@@ -1,9 +1,5 @@
 ﻿using cargo_transportation.Classes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace cargo_transportation
@@ -28,7 +24,7 @@ namespace cargo_transportation
             if (authForm.isAuthorized == true)
             {
                 User user = authForm.user;
-                Application.Run( new MainForm(user));
+                Application.Run(new MainForm(user));
             }
         }
     }

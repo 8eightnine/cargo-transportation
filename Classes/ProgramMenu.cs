@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Data.SQLite;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 
 namespace cargo_transportation.Classes
@@ -16,7 +12,7 @@ namespace cargo_transportation.Classes
             DataTable dt = new DataTable();
             Database.ReadData("Databases\\menu.db", "SELECT * FROM Menu", dt);
 
-             int rowsCount = dt.Rows.Count;
+            int rowsCount = dt.Rows.Count;
             var parentValues = dt.AsEnumerable().Where(x => x["ParentID"].ToString().Equals("0"));
             var childValues = dt.AsEnumerable().Where(x => x["ParentID"].ToString() != "0");
             ToolStripMenuItem[] toolStripItems = new ToolStripMenuItem[rowsCount + 1];
@@ -83,9 +79,23 @@ namespace cargo_transportation.Classes
         private void MenuItemClickHandler(object sender, EventArgs e)
         {
             ToolStripMenuItem clickedItem = (ToolStripMenuItem)sender;
-            var strip = clickedItem.Owner;
-            var values = clickedItem.Name.ToString().Split('-');
-            LibInvoke.InvokeFunction(values[0], values[1], (Form)strip.Parent);
+            ToolStrip strip;
+            string[] values = new string[2];
+            if (clickedItem.OwnerItem == null)
+            {
+                strip = clickedItem.Owner;
+                values = clickedItem.Name.ToString().Split('-');
+                strip.Parent.Tag = values[0];
+                LibInvoke.InvokeFunction(values[0], values[1], (Form)strip.Parent);
+            }
+            else
+            {
+                var stripParent = clickedItem.OwnerItem;
+                values[0] = clickedItem.Name;
+                values[1] = clickedItem.Tag.ToString();
+                stripParent.Owner.Parent.Tag = values[0];
+                LibInvoke.InvokeFunction(values[0], values[1], (Form)stripParent.Owner.Parent);
+            }
         }
     }
 }

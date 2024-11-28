@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cargo-transportation", "car
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AboutLibrary", "AboutLibrary\AboutLibrary.csproj", "{B2B1B3EB-9B9C-4CE9-9F58-A8051E8A5F30}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrdersLibrary", "..\OrdersLibrary\OrdersLibrary.csproj", "{6CCF1B71-DBD4-4223-9255-674BC5952458}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B2B1B3EB-9B9C-4CE9-9F58-A8051E8A5F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2B1B3EB-9B9C-4CE9-9F58-A8051E8A5F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2B1B3EB-9B9C-4CE9-9F58-A8051E8A5F30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CCF1B71-DBD4-4223-9255-674BC5952458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CCF1B71-DBD4-4223-9255-674BC5952458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CCF1B71-DBD4-4223-9255-674BC5952458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CCF1B71-DBD4-4223-9255-674BC5952458}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

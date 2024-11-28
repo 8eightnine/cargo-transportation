@@ -8,25 +8,29 @@ namespace cargo_transportation.Classes
     {
         public static int InvokeFunction(string dllName, string functionName, Form prnt)
         {
-            try
+            if (dllName != "NULL")
             {
-                Assembly asm = Assembly.LoadFrom(dllName + ".dll");
-                Type t = asm.GetType(dllName + "." + dllName);
-                if (t != null)
+                try
                 {
-                    MethodInfo square = t.GetMethod(functionName);
-                    object result = square?.Invoke(null, new object[] { prnt });
+                    Assembly asm = Assembly.LoadFrom(dllName + ".dll");
+                    Type t = asm.GetType(dllName + "." + dllName);
+                    if (t != null)
+                    {
+                        MethodInfo square = t.GetMethod(functionName);
+                        object result = square?.Invoke(null, new object[] { prnt });
+                    }
+                    else
+                    {
+                        throw new Exception("Отсутствует класс");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new Exception("Отсутствует класс");
+                    ErrorHandler.DllLoadingError(ex.Message, dllName, functionName);
                 }
             }
-            catch (Exception ex)
-            {
-                ErrorHandler.DllLoadingError(ex.Message, dllName, functionName);
-            }
-                return 0;
+
+            return 0;
         }
     }
 }

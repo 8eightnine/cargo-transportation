@@ -14,6 +14,7 @@ namespace About
         private static Button aboutButton;
         private static Button developerButton;
         private static PictureBox pictureBox;
+        private static WebBrowser webBrowser;
 
 
         // Функция для отрисовки элементов управления
@@ -26,11 +27,11 @@ namespace About
             else
             {
                 var richTextBox1 = new RichTextBox();
-                var richTextBox2 = new RichTextBox();
                 var button1 = new Button();
                 var button2 = new Button();
                 var pictureBox1 = new PictureBox();
                 var menuStrip1 = new MenuStrip();
+                var webBrowser1 = new WebBrowser();
                 ((System.ComponentModel.ISupportInitialize)(pictureBox1)).BeginInit();
                 mainForm.SuspendLayout();
                 foreach (Control control in mainForm.Controls.OfType<Control>().ToList())
@@ -43,25 +44,15 @@ namespace About
                 // 
                 // richTextBox1
                 // 
-                richTextBox1.BackColor = System.Drawing.SystemColors.Control;
+                richTextBox1.BackColor = SystemColors.Control;
                 richTextBox1.BorderStyle = BorderStyle.None;
                 richTextBox1.Location = new Point(103, 289);
                 richTextBox1.Name = "mainTextBox";
                 richTextBox1.Size = new Size(689, 160);
                 richTextBox1.TabIndex = 0;
                 richTextBox1.ReadOnly = true;
+                richTextBox1.Anchor = ((AnchorStyles)(((AnchorStyles.Bottom | AnchorStyles.Left) | AnchorStyles.Right)));
                 mainTextBox = richTextBox1;
-                // 
-                // richTextBox2
-                // 
-                richTextBox2.BackColor = System.Drawing.SystemColors.Control;
-                richTextBox2.BorderStyle = BorderStyle.None;
-                richTextBox2.Location = new Point(103, 35);
-                richTextBox2.Name = "infoTextBox";
-                richTextBox2.Size = new Size(689, 560);
-                richTextBox2.TabIndex = 0;
-                richTextBox2.ReadOnly = true;
-                infoTextBox = richTextBox2;
                 // 
                 // button1
                 // 
@@ -72,6 +63,7 @@ namespace About
                 button1.TabIndex = 1;
                 button1.Text = "О программе";
                 button1.UseVisualStyleBackColor = true;
+                button1.Anchor = ((AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left));
                 aboutButton = button1;
                 // 
                 // button2
@@ -83,6 +75,7 @@ namespace About
                 button2.TabIndex = 2;
                 button2.Text = "Разработчик";
                 button2.UseVisualStyleBackColor = true;
+                button2.Anchor = ((AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left));
                 developerButton = button2;
                 // 
                 // pictureBox1
@@ -90,20 +83,37 @@ namespace About
                 pictureBox1.Location = new Point(311, 27);
                 pictureBox1.Name = "logoBox";
                 pictureBox1.Size = new Size(256, 241);
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
                 pictureBox1.TabIndex = 3;
-                pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
                 pictureBox1.TabStop = false;
+                pictureBox1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right)));
                 pictureBox = pictureBox1;
-
+                // 
+                // webBrowser1
+                // 
+                webBrowser1.Location = new Point(103, 27);
+                webBrowser1.MinimumSize = new Size(20, 20);
+                webBrowser1.Name = "webBrowser1";
+                webBrowser1.Size = new Size(689, 422);
+                webBrowser1.TabIndex = 5;
+                webBrowser1.Visible = false;
+                webBrowser1.Url = new Uri("https://glowing-alfajores-408db9.netlify.app/", UriKind.Absolute);
+                webBrowser1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right)));
+                webBrowser = webBrowser1;
+                //
+                // Adding controls to the form
+                //
                 ((System.ComponentModel.ISupportInitialize)(pictureBox1)).EndInit();
                 mainForm.Controls.Add(richTextBox1);
-                mainForm.Controls.Add(richTextBox2);
                 mainForm.Controls.Add(button1);
                 mainForm.Controls.Add(button2);
+                mainForm.Controls.Add(webBrowser);
                 mainForm.Controls.Add(pictureBox1);
-                mainForm.ResumeLayout(false);
+                mainForm.ResumeLayout();
+                mainForm.PerformLayout();
                 _isInitialized = true;
+                mainForm.Text = "ИС ООО \"Перевозки и КО\" | Справка";
             }
         }
 
@@ -111,17 +121,16 @@ namespace About
         {
             pictureBox.BringToFront();
             mainTextBox.BringToFront();
-            infoTextBox.Visible = false;
+            webBrowser.Visible = false;
             pictureBox.Image = Resources.logo;
             mainTextBox.Height = 160;
-            mainTextBox.Text = "Программа разработана для упрощения жизни и просто для кайфа";
+            mainTextBox.Text = "Программа ИС ООО \"Перевозки и КО\"\nРазработчик: Бузмаков Антон, АП-227\nРазработано в качестве курсовой работы по дисциплине \"Базы данных\"";
         }
 
         private static void Button2_Click(object sender, EventArgs e)
         {
-            infoTextBox.Visible = true;
-            infoTextBox.BringToFront();
-            infoTextBox.Text = "РУКОВОДСТВО ПОЛЬЗОВАТЕЛЯ БУДЕТ ТУТ";
+            webBrowser.Visible = true;
+            webBrowser.BringToFront();
         }
     }
 }
