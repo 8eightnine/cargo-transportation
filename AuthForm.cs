@@ -29,6 +29,7 @@ namespace cargo_transportation
                     var dt = new DataTable();
                     using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\users.db';Version=3; FailIfMissing=False"))
                     {
+                        connection.Open();
                         using (SQLiteCommand cmd = connection.CreateCommand())
                         { 
                             cmd.CommandText = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
@@ -42,7 +43,6 @@ namespace cargo_transportation
                     
                     if (dt.Rows.Count > 0)
                     {
-                        // TODO: beautify
                         username = dt.Rows[0][1].ToString();
                         password = dt.Rows[0][2].ToString();
                         Boolean.TryParse(dt.Rows[0][3].ToString(), out readRight);
@@ -84,7 +84,7 @@ namespace cargo_transportation
         {
             var dt = new DataTable();
             
-            using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\test.db';Version=3; FailIfMissing=False"))
+            using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\users.db';Version=3; FailIfMissing=False"))
             {
                 using (SQLiteCommand cmd = connection.CreateCommand())
                 {
@@ -114,8 +114,9 @@ namespace cargo_transportation
                         break;
                     }
 
-                    using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\test.db';Version=3; FailIfMissing=False"))
+                    using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\users.db';Version=3; FailIfMissing=False"))
                     {
+                        connection.Open();
                         using (SQLiteCommand cmd = connection.CreateCommand())
                         {
                             cmd.CommandText = "INSERT INTO Users (Username, Password, Read, Write, Edit, Del)" + $"VALUES ('{_login}', '{_password}', '{1}', '{0}', '{0}', '{0}');";

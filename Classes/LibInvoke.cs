@@ -16,8 +16,8 @@ namespace cargo_transportation.Classes
                     Type t = asm.GetType(dllName + "." + dllName);
                     if (t != null)
                     {
-                        MethodInfo square = t.GetMethod(functionName);
-                        object result = square?.Invoke(null, new object[] { prnt });
+                        MethodInfo method = t.GetMethod(functionName);
+                        object result = method?.Invoke(null, new object[] { prnt });
                     }
                     else
                     {

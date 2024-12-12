@@ -2,13 +2,13 @@
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace About
 {
     public class About
     {
-        private static bool _isInitialized;
         private static RichTextBox mainTextBox;
         private static RichTextBox infoTextBox;
         private static Button aboutButton;
@@ -20,12 +20,6 @@ namespace About
         // Функция для отрисовки элементов управления
         public static void ShowAbout(Form mainForm)
         {
-            if (_isInitialized)
-            {
-                return;
-            }
-            else
-            {
                 var richTextBox1 = new RichTextBox();
                 var button1 = new Button();
                 var button2 = new Button();
@@ -34,13 +28,7 @@ namespace About
                 var webBrowser1 = new WebBrowser();
                 ((System.ComponentModel.ISupportInitialize)(pictureBox1)).BeginInit();
                 mainForm.SuspendLayout();
-                foreach (Control control in mainForm.Controls.OfType<Control>().ToList())
-                {
-                    if (!(control is MenuStrip))
-                    {
-                        mainForm.Controls.Remove(control);
-                    }
-                }
+                mainForm.Controls.Clear();
                 // 
                 // richTextBox1
                 // 
@@ -101,10 +89,24 @@ namespace About
                 webBrowser1.Url = new Uri("https://glowing-alfajores-408db9.netlify.app/", UriKind.Absolute);
                 webBrowser1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right)));
                 webBrowser = webBrowser1;
+                ((System.ComponentModel.ISupportInitialize)(pictureBox1)).EndInit();
+                //
+                // Adding menu to the form
+                //
+                Assembly asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "cargo-transportation");
+                Type programMenuType = asm.GetType("cargo_transportation.Classes.ProgramMenu");
+                object programMenuInstance = Activator.CreateInstance(programMenuType);
+                MethodInfo populateMethod = programMenuType.GetMethod("Populate");
+                ToolStripItemCollection result = (ToolStripItemCollection)populateMethod?.Invoke(programMenuInstance, null);
+                int size = result.Count;
+                for (int i = size - 1; i >= 0; i--)
+                {
+                    menuStrip1.Items.Add(result[i]);
+                }
                 //
                 // Adding controls to the form
                 //
-                ((System.ComponentModel.ISupportInitialize)(pictureBox1)).EndInit();
+                mainForm.Controls.Add(menuStrip1);
                 mainForm.Controls.Add(richTextBox1);
                 mainForm.Controls.Add(button1);
                 mainForm.Controls.Add(button2);
@@ -112,13 +114,11 @@ namespace About
                 mainForm.Controls.Add(pictureBox1);
                 mainForm.ResumeLayout();
                 mainForm.PerformLayout();
-                _isInitialized = true;
                 mainForm.Text = "ИС ООО \"Перевозки и КО\" | Справка";
-            }
         }
 
         private static void Button1_Click(object sender, EventArgs e)
-        {
+        {            
             pictureBox.BringToFront();
             mainTextBox.BringToFront();
             webBrowser.Visible = false;

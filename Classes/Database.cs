@@ -36,5 +36,37 @@ namespace cargo_transportation.Classes
 
             return dt;
         }
+
+        public static void WriteData(string path, string command, Dictionary<string, object> parameters = null)
+        {
+            string fullPath = $"Data Source='{path}';Version=3; FailIfMissing=False";
+            try
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(fullPath))
+                {
+                    connection.Open();
+                    using (SQLiteCommand cmd = connection.CreateCommand())
+                    {
+                        cmd.CommandText = command;
+
+                        // Add parameters to prevent SQL injection
+                        if (parameters != null)
+                        {
+                            foreach (var param in parameters)
+                            {
+                                cmd.Parameters.AddWithValue(param.Key, param.Value);
+                            }
+                        }
+
+                        cmd.ExecuteNonQuery(); // Execute the command
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
     }
 }
