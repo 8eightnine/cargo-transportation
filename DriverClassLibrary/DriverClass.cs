@@ -6,9 +6,9 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 
-namespace DriverCategory
+namespace DriverClass
 {
-    public class DriverCategory
+    public class DriverClass
     {
         // Controls
         private static DataGridView dataGridView;
@@ -22,7 +22,7 @@ namespace DriverCategory
         private static DataTable dataTable = new DataTable();
         internal static object databaseObject;
 
-        public static void ShowDriverCategory(Form mainForm)
+        public static void ShowDriverClass(Form mainForm)
         {
             #region Designer
             var components = new System.ComponentModel.Container();
@@ -92,8 +92,8 @@ namespace DriverCategory
             textBox1.TextChanged += TextBox1_TextChanged;
             textBox = textBox1;
 
-            
-#endregion
+
+            #endregion
 
             #region adding controls to the form
             Assembly asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "cargo-transportation");
@@ -120,7 +120,7 @@ namespace DriverCategory
             mainForm.PerformLayout();
             mainForm.Text = "ИС ООО \"Перевозки и КО\" | Справочники | Категории водителей";
             #endregion
-            
+
             Type databaseType = asm.GetType("cargo_transportation.Classes.Database");
             object databaseInstance = Activator.CreateInstance(databaseType);
             databaseObject = databaseInstance;
@@ -143,7 +143,7 @@ namespace DriverCategory
                 dataTable.Clear();
 
             MethodInfo populateMethod = databaseObject.GetType().GetMethod("ReadData");
-            var result = populateMethod?.Invoke(databaseObject, new object[] { "Databases\\make.db", "SELECT * FROM 'Category_List'", dataTable });
+            var result = populateMethod?.Invoke(databaseObject, new object[] { "Databases\\make.db", "SELECT * FROM 'Class_List'", dataTable });
             dataGridView.DataSource = dataTable;
         }
         private static void AddNewEntry(object sender, EventArgs e)
@@ -154,7 +154,7 @@ namespace DriverCategory
             if (temp != null)
             {
                 MethodInfo addDataMethod = databaseObject.GetType().GetMethod("WriteData");
-                var command = $"INSERT INTO Category_List (ID, Value) VALUES (@Value1, @Value2)";
+                var command = $"INSERT INTO Class_List (ID, Name) VALUES (@Value1, @Value2)";
                 var parameters = new Dictionary<string, object>
                 {
                     { "@Value1", dataGridView.Rows.Count },
@@ -176,7 +176,7 @@ namespace DriverCategory
                 if (dialogResult == DialogResult.Yes)
                 {
                     MethodInfo addDataMethod = databaseObject.GetType().GetMethod("WriteData");
-                    var command = $"DELETE FROM Category_List WHERE ID = @Value1 AND Value = @Value2";
+                    var command = $"DELETE FROM Class_List WHERE ID = @Value1 AND Name = @Value2";
                     var parameters = new Dictionary<string, object>
                 {
                     { "@Value1", rowIndex + 1},
@@ -185,7 +185,7 @@ namespace DriverCategory
                     var result = addDataMethod?.Invoke(databaseObject, new object[] { "Databases\\make.db", command, parameters });
                     populateTable(dataGridView, databaseObject);
                 }
-            }
+                }
             else
             {
                 MessageBox.Show("Выберите одну запись для удаления.");
