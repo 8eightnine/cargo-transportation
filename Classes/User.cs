@@ -1,7 +1,19 @@
-﻿namespace cargo_transportation.Classes
+﻿using System.Data;
+
+namespace cargo_transportation.Classes
 {
+    public struct Rights
+    {
+        public string name;
+        public int read;
+        public int write;
+        public int edit;
+        public int delete;
+    };
+
     public class User
     {
+        public Rights[] rights;
         private string _login;
         private string _password;
         private bool _read;
@@ -9,14 +21,10 @@
         private bool _edit;
         private bool _delete;
 
-        public User(string login, string password, bool r, bool w, bool e, bool d)
+        public User(string login, string password)
         {
             _login = login;
             _password = password;
-            _read = r;
-            _write = w;
-            _edit = e;
-            _delete = d;
         }
 
         public string Password
@@ -54,6 +62,14 @@
         {
             get { return _delete; }
             set { _delete = value; }
+        }
+
+        public void AddRights(DataTable data)
+        {
+            for(int i = 0; i < data.Rows.Count; i++) 
+            {
+                string name = data.Rows[i].ItemArray[0].ToString();
+            }
         }
     }
 }

@@ -7,10 +7,10 @@ namespace cargo_transportation.Classes
 {
     internal class ProgramMenu
     {
-        public ToolStripItemCollection Populate()
+        public ToolStripItemCollection Populate(User user)
         {
             DataTable dt = new DataTable();
-            Database.ReadData("Databases\\menu.db", "SELECT * FROM Menu", dt);
+            Database.ReadData("Databases\\users.db", "SELECT * FROM Menu", dt);
 
             int rowsCount = dt.Rows.Count;
             var parentValues = dt.AsEnumerable().Where(x => x["ParentID"].ToString().Equals("0"));
@@ -28,7 +28,9 @@ namespace cargo_transportation.Classes
                     tsmi.ToolTipText = dr["Order"].ToString();
                     if (!tsmi.Tag.Equals("NULL"))
                         tsmi.Click += new EventHandler(MenuItemClickHandler);
-
+                    if (user.rights.FirstOrDefault(r => r.name == tsmi.Name.ToString()).read == 1) {
+                        tsmi.Enabled = false;
+                    }
                     toolStripItems[Int64.Parse(dr["ID"].ToString())] = tsmi;
                 }
 
@@ -96,6 +98,41 @@ namespace cargo_transportation.Classes
                 stripParent.Owner.Parent.Tag = values[0];
                 LibInvoke.InvokeFunction(values[0], values[1], (Form)stripParent.Owner.Parent);
             }
+        }
+
+        public static int RegisterNewUser(User user, string username, string password)
+        {
+            string cmd = $"INSERT INTO Users (Username, Password) VALUES ('{username}', '{password}')";
+            Database.WriteData("Databases\\users.db", cmd, null);
+            DataTable users = new DataTable();
+            Database.ReadData("Databases\\users.db", $"SELECT * FROM Users WHERE Username = '{username}'", users);
+            DataRow userRow = users.Rows[0];
+            DataTable dt = new DataTable();
+            Database.ReadData("Databases\\users.db", "SELECT * FROM Menu", dt);
+            int rowsCount = dt.Rows.Count;
+            user.rights = new Rights[rowsCount];
+            string command = "INSERT INTO Rights (UserID, ModuleID, Read, Write, Edit, Del) ";
+            for (int i = 0; i < rowsCount; i++)
+            {
+                string temp;
+                DataRow moduleRow = dt.Rows[i];
+                if (moduleRow.ItemArray[3].ToString() == "Management")
+                    temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {0}, {0}, {0}, {0})";
+                else
+                    temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {1}, {0}, {0}, {0})"; 
+                try
+                {
+                    Database.WriteData("Databases\\users.db", temp, null);
+                    user.rights[i].name = moduleRow.ItemArray[3].ToString();
+                    user.rights[i].read = 1;
+                    user.rights[i].write = user.rights[i].edit = user.rights[i].delete = 0;
+                }
+                catch (Exception e)
+                {
+                    return 0;
+                }
+            }
+            return 1;
         }
     }
 }

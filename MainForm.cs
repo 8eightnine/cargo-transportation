@@ -18,7 +18,7 @@ namespace cargo_transportation
         private void MainForm_Load(object sender, EventArgs e)
         {
             ProgramMenu menu = new ProgramMenu();
-            ToolStripItemCollection temp = menu.Populate();
+            ToolStripItemCollection temp = menu.Populate(currentUser);
             int size = temp.Count;
             for (int i = size - 1; i >= 0; i--)
             {

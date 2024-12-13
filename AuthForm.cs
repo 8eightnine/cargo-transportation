@@ -39,16 +39,11 @@ namespace cargo_transportation
                     }
 
                     string username = "", password = "";
-                    bool readRight = false, writeRight = false, editRight = false, deleteRight = false;
                     
                     if (dt.Rows.Count > 0)
                     {
                         username = dt.Rows[0][1].ToString();
                         password = dt.Rows[0][2].ToString();
-                        Boolean.TryParse(dt.Rows[0][3].ToString(), out readRight);
-                        Boolean.TryParse(dt.Rows[0][4].ToString(), out writeRight);
-                        Boolean.TryParse(dt.Rows[0][5].ToString(), out editRight);
-                        Boolean.TryParse(dt.Rows[0][6].ToString(), out deleteRight);
                     }
                     else
                     {
@@ -62,7 +57,9 @@ namespace cargo_transportation
                     if (username.Equals(_login) && password.Equals(_password))
                     {
                         isAuthorized = true;
-                        user = new User(_login, _password, readRight, writeRight, editRight, deleteRight);
+                        user = new User(_login, _password);
+                        DataTable data = new DataTable();
+                        user.AddRights(data);
                         Close();
                     }
                     else
@@ -114,20 +111,17 @@ namespace cargo_transportation
                         break;
                     }
 
-                    using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\users.db';Version=3; FailIfMissing=False"))
+                    user = new User(_login, _password);
+                    if (ProgramMenu.RegisterNewUser(user, _login, _password) == 1)
                     {
-                        connection.Open();
-                        using (SQLiteCommand cmd = connection.CreateCommand())
-                        {
-                            cmd.CommandText = "INSERT INTO Users (Username, Password, Read, Write, Edit, Del)" + $"VALUES ('{_login}', '{_password}', '{1}', '{0}', '{0}', '{0}');";
-                            cmd.ExecuteNonQuery();
-                        }
+                        MessageBox.Show("Регистрация прошла успешно!", "Регистрация");
+                        isAuthorized = true;
+                        Close();
                     }
-
-                    MessageBox.Show("Регистрация прошла успешно!", "Регистрация");
-                    isAuthorized = true;
-                    user = new User(_login, _password, true, false, false, false);
-                    Close();
+                    else
+                    {
+                        MessageBox.Show("Ошибка при регистрации, попробуйте еще раз", "Регистрация");
+                    }
 
                 } while (false);
             }
@@ -183,7 +177,7 @@ namespace cargo_transportation
             if (e.Button == MouseButtons.Middle)
             {
                 isAuthorized = true;
-                user = new User("admin", "admin", true, true, true, true);
+                user = new User("admin", "admin");
                 Close();
             }
         }
