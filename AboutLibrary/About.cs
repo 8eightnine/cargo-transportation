@@ -15,11 +15,13 @@ namespace About
         private static Button developerButton;
         private static PictureBox pictureBox;
         private static WebBrowser webBrowser;
+        private static Form _mainForm;
 
 
         // Функция для отрисовки элементов управления
         public static void ShowAbout(Form mainForm)
         {
+                _mainForm = mainForm;
                 var richTextBox1 = new RichTextBox();
                 var button1 = new Button();
                 var button2 = new Button();
@@ -95,9 +97,10 @@ namespace About
                 //
                 Assembly asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "cargo-transportation");
                 Type programMenuType = asm.GetType("cargo_transportation.Classes.ProgramMenu");
+                object curUser = asm.GetType("cargo_transportation.MainForm").GetField("currentUser").GetValue(mainForm);
                 object programMenuInstance = Activator.CreateInstance(programMenuType);
                 MethodInfo populateMethod = programMenuType.GetMethod("Populate");
-                ToolStripItemCollection result = (ToolStripItemCollection)populateMethod?.Invoke(programMenuInstance, null);
+                ToolStripItemCollection result = (ToolStripItemCollection)populateMethod?.Invoke(programMenuInstance, new object[] { curUser });
                 int size = result.Count;
                 for (int i = size - 1; i >= 0; i--)
                 {

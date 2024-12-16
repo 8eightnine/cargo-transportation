@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using cargo_transportation.Classes;
+using cargo_transportation;
+using System.Linq;
 
 namespace DriverCategory
 {
@@ -21,10 +23,15 @@ namespace DriverCategory
         // Working varaibles
         private static DataTable dataTable = new DataTable();
         internal static object databaseObject;
+        internal static User currentUser;
+        internal static MainForm _mainForm;
+        internal static string moduleName;
 
-        public static void ShowDriverCategory(Form mainForm)
+        public static void ShowDriverCategory(MainForm mainForm)
         {
             #region Designer
+            currentUser = mainForm.currentUser;
+            moduleName = mainForm.Tag.ToString();
             var components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
             var dataGridView1 = new DataGridView();
@@ -73,6 +80,10 @@ namespace DriverCategory
             AddToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             AddToolStripMenuItem.Text = "Добавить";
             AddToolStripMenuItem.Click += new EventHandler(AddNewEntry);
+            if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().write.Equals(0))
+            {
+                AddToolStripMenuItem.Enabled = false;
+            }
             // 
             // DeleteToolStripMenuItem
             // 
@@ -80,6 +91,10 @@ namespace DriverCategory
             DeleteToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             DeleteToolStripMenuItem.Text = "Удалить";
             DeleteToolStripMenuItem.Click += new EventHandler(DeleteEntry);
+            if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().delete.Equals(0))
+            {
+                DeleteToolStripMenuItem.Enabled = false;
+            }
             // 
             // textBox
             // 
@@ -92,15 +107,12 @@ namespace DriverCategory
             textBox1.TextChanged += TextBox1_TextChanged;
             textBox = textBox1;
 
-            
-#endregion
+
+            #endregion
 
             #region adding controls to the form
-            Assembly asm = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "cargo-transportation");
-            Type programMenuType = asm.GetType("cargo_transportation.Classes.ProgramMenu");
-            object programMenuInstance = Activator.CreateInstance(programMenuType);
-            MethodInfo populateMethod = programMenuType.GetMethod("Populate");
-            ToolStripItemCollection result = (ToolStripItemCollection)populateMethod?.Invoke(programMenuInstance, null);
+            ProgramMenu menu = new ProgramMenu();
+            ToolStripItemCollection result = menu.Populate(currentUser);
             int size = result.Count;
             for (int i = size - 1; i >= 0; i--)
             {
@@ -113,7 +125,6 @@ namespace DriverCategory
             mainForm.MinimumSize = new System.Drawing.Size(818, 494);
             mainForm.Name = "MainForm";
             mainForm.StartPosition = FormStartPosition.CenterScreen;
-            mainForm.Text = "ИС ООО \"Перевозки и КО\" | Заказы";
             ((System.ComponentModel.ISupportInitialize)(dataGridView1)).EndInit();
             contextMenuStrip1.ResumeLayout(false);
             mainForm.ResumeLayout();
@@ -121,10 +132,7 @@ namespace DriverCategory
             mainForm.Text = "ИС ООО \"Перевозки и КО\" | Справочники | Категории водителей";
             #endregion
             
-            Type databaseType = asm.GetType("cargo_transportation.Classes.Database");
-            object databaseInstance = Activator.CreateInstance(databaseType);
-            databaseObject = databaseInstance;
-            populateTable(dataGridView, databaseObject);
+            populateTable(dataGridView);
         }
         private static void TextBox1_TextChanged(object sender, EventArgs e)
         {
@@ -137,13 +145,11 @@ namespace DriverCategory
             (dataGridView.DataSource as DataTable).DefaultView.RowFilter = sb.ToString();
             dataGridView.Refresh();
         }
-        private static void populateTable(DataGridView dataGridView, object databaseObject)
+        private static void populateTable(DataGridView dataGridView)
         {
             if (dataTable.Rows.Count > 0)
                 dataTable.Clear();
-
-            MethodInfo populateMethod = databaseObject.GetType().GetMethod("ReadData");
-            var result = populateMethod?.Invoke(databaseObject, new object[] { "Databases\\make.db", "SELECT * FROM 'Category_List'", dataTable });
+            Database.ReadData("Databases\\make.db", "SELECT * FROM 'Category_List'", dataTable);
             dataGridView.DataSource = dataTable;
         }
         private static void AddNewEntry(object sender, EventArgs e)
@@ -161,7 +167,7 @@ namespace DriverCategory
                     { "@Value2", temp }
                 };
                 var result = addDataMethod?.Invoke(databaseObject, new object[] { "Databases\\make.db", command, parameters });
-                populateTable(dataGridView, databaseObject);
+                populateTable(dataGridView);
             }
         }
         private static void DeleteEntry(object sender, EventArgs e)
@@ -183,7 +189,7 @@ namespace DriverCategory
                     { "@Value2", rowData }
                 };
                     var result = addDataMethod?.Invoke(databaseObject, new object[] { "Databases\\make.db", command, parameters });
-                    populateTable(dataGridView, databaseObject);
+                    populateTable(dataGridView);
                 }
             }
             else

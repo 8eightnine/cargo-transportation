@@ -52,5 +52,11 @@
     <Compile Include="CarBrands.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\! cargo-transportation.csproj">
+      <Project>{37a91009-1b11-4f4d-851b-38ebaad9ec69}</Project>
+      <Name>! cargo-transportation</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

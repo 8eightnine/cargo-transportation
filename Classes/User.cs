@@ -1,14 +1,15 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace cargo_transportation.Classes
 {
     public struct Rights
     {
-        public string name;
-        public int read;
-        public int write;
-        public int edit;
-        public int delete;
+        public string name { get; set; }
+        public int read { get; set; }
+        public int write { get; set; }
+        public int edit { get; set; }
+        public int delete { get; set; }
     };
 
     public class User
@@ -64,12 +65,25 @@ namespace cargo_transportation.Classes
             set { _delete = value; }
         }
 
-        public void AddRights(DataTable data)
+        public void AddRights(DataTable rules, DataTable modules)
         {
-            for(int i = 0; i < data.Rows.Count; i++) 
+            this.rights = new Rights[rules.Rows.Count];
+            //MessageBox.Show(rules.Rows.Count.ToString());
+            for (int i = 0; i < rules.Rows.Count - 1; i++)
             {
-                string name = data.Rows[i].ItemArray[0].ToString();
+                int libID = Int32.Parse(rules.Rows[i].ItemArray[0].ToString());
+                // Присваиваем права
+                this.rights[i].name = modules.Rows[libID - 1].ItemArray[1].ToString();
+                this.rights[i].read = Int32.Parse(rules.Rows[i].ItemArray[1].ToString());
+                this.rights[i].write = Int32.Parse(rules.Rows[i].ItemArray[2].ToString());
+                this.rights[i].edit = Int32.Parse(rules.Rows[i].ItemArray[3].ToString());
+                this.rights[i].delete = Int32.Parse(rules.Rows[i].ItemArray[4].ToString());
+
+
             }
+            // Чистим ненужные данные
+            rules.Dispose();
+            modules.Dispose();
         }
     }
 }

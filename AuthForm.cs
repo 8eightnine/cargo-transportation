@@ -39,9 +39,11 @@ namespace cargo_transportation
                     }
 
                     string username = "", password = "";
+                    int id;
                     
                     if (dt.Rows.Count > 0)
                     {
+                        id = Int32.Parse(dt.Rows[0][0].ToString());
                         username = dt.Rows[0][1].ToString();
                         password = dt.Rows[0][2].ToString();
                     }
@@ -58,8 +60,13 @@ namespace cargo_transportation
                     {
                         isAuthorized = true;
                         user = new User(_login, _password);
-                        DataTable data = new DataTable();
-                        user.AddRights(data);
+                        DataTable rights = new DataTable();
+                        DataTable modules = new DataTable();
+                        string command = $"SELECT ModuleID, Read, Write, Edit, Del FROM Rights WHERE UserID = {id}";
+                        Database.ReadData("Databases\\users.db", command, rights);
+                        command = $"SELECT ID, Name FROM Menu";
+                        Database.ReadData("Databases\\users.db", command, modules);
+                        user.AddRights(rights, modules);
                         Close();
                     }
                     else
@@ -176,9 +183,9 @@ namespace cargo_transportation
         {
             if (e.Button == MouseButtons.Middle)
             {
-                isAuthorized = true;
-                user = new User("admin", "admin");
-                Close();
+                user = new User(_login, _password);
+                loginBox.Text = passwordBox.Text = "user1";
+                LoginButton.PerformClick();
             }
         }
     }

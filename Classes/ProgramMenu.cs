@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace cargo_transportation.Classes
 {
-    internal class ProgramMenu
+    public class ProgramMenu
     {
         public ToolStripItemCollection Populate(User user)
         {
@@ -28,9 +28,10 @@ namespace cargo_transportation.Classes
                     tsmi.ToolTipText = dr["Order"].ToString();
                     if (!tsmi.Tag.Equals("NULL"))
                         tsmi.Click += new EventHandler(MenuItemClickHandler);
-                    if (user.rights.FirstOrDefault(r => r.name == tsmi.Name.ToString()).read == 1) {
+                    // Отключаем те пункты, к которым закрыт доступ
+                    if (user.rights.FirstOrDefault(r => r.name == tsmi.Text.ToString()).read == 0)
                         tsmi.Enabled = false;
-                    }
+
                     toolStripItems[Int64.Parse(dr["ID"].ToString())] = tsmi;
                 }
 
@@ -42,11 +43,15 @@ namespace cargo_transportation.Classes
                 {
                     ToolStripMenuItem tsmi = new ToolStripMenuItem();
 
-                    tsmi.Name = dr["LibraryName"].ToString();
+                    tsmi.Name = dr["LibraryName"].ToString() + "-" + dr["Function"].ToString();
                     tsmi.Text = dr["Name"].ToString();
-                    tsmi.Tag = dr["Function"].ToString();
+                    tsmi.Tag = dr["ID"].ToString();
                     tsmi.ToolTipText = dr["Order"].ToString();
                     tsmi.Click += new EventHandler(MenuItemClickHandler);
+                    // Отключаем те пункты, к которым закрыт доступ
+                    if (user.rights.FirstOrDefault(r => r.name == tsmi.Text.ToString()).read == 0)
+                        tsmi.Enabled = false;
+
                     var test = toolStripItems[Int64.Parse(dr["ParentID"].ToString())].DropDownItems.Add(tsmi);
                 }
             }
@@ -87,15 +92,14 @@ namespace cargo_transportation.Classes
             {
                 strip = clickedItem.Owner;
                 values = clickedItem.Name.ToString().Split('-');
-                strip.Parent.Tag = values[0];
+                strip.Parent.Tag = clickedItem.Text;
                 LibInvoke.InvokeFunction(values[0], values[1], (Form)strip.Parent);
             }
             else
             {
                 var stripParent = clickedItem.OwnerItem;
-                values[0] = clickedItem.Name;
-                values[1] = clickedItem.Tag.ToString();
-                stripParent.Owner.Parent.Tag = values[0];
+                values = clickedItem.Name.ToString().Split('-');
+                stripParent.Owner.Parent.Tag = clickedItem.Text;
                 LibInvoke.InvokeFunction(values[0], values[1], (Form)stripParent.Owner.Parent);
             }
         }
@@ -119,7 +123,7 @@ namespace cargo_transportation.Classes
                 if (moduleRow.ItemArray[3].ToString() == "Management")
                     temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {0}, {0}, {0}, {0})";
                 else
-                    temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {1}, {0}, {0}, {0})"; 
+                    temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {1}, {0}, {0}, {0})";
                 try
                 {
                     Database.WriteData("Databases\\users.db", temp, null);

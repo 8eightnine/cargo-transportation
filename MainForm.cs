@@ -7,7 +7,7 @@ namespace cargo_transportation
 {
     public partial class MainForm : Form
     {
-        private User currentUser;
+        public User currentUser;
 
         public MainForm(User user)
         {
