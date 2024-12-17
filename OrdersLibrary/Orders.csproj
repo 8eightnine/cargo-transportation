@@ -64,6 +64,10 @@
       <Project>{37a91009-1b11-4f4d-851b-38ebaad9ec69}</Project>
       <Name>! cargo-transportation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CargoLibrary\Cargo.csproj">
+      <Project>{6617e468-a3d0-4b0d-bfb3-f9a6b629a874}</Project>
+      <Name>Cargo</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="OrderForm.resx">

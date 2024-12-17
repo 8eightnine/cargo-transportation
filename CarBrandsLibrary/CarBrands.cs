@@ -15,9 +15,6 @@ namespace CarBrands
         // Controls
         private static DataGridView dataGridView;
         private static Button addNewButton;
-        private static ContextMenuStrip contextMenuStrip;
-        private static ToolStripMenuItem AddMenuItem;
-        private static ToolStripMenuItem DeleteMenuItem;
         private static TextBox textBox;
 
         // Working varaibles
@@ -62,6 +59,7 @@ namespace CarBrands
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.Size = new System.Drawing.Size(780, 392);
             dataGridView1.TabIndex = 2;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView = dataGridView1;
             // 
             // contextMenuStrip
@@ -72,7 +70,6 @@ namespace CarBrands
             DeleteToolStripMenuItem});
             contextMenuStrip1.Name = "contextMenuStrip";
             contextMenuStrip1.Size = new System.Drawing.Size(122, 48);
-            contextMenuStrip = contextMenuStrip1;
             // 
             // AddToolStripMenuItem
             // 
@@ -159,36 +156,32 @@ namespace CarBrands
             string temp = fo.valueToChange;
             if (temp != null)
             {
-                MethodInfo addDataMethod = databaseObject.GetType().GetMethod("WriteData");
                 var command = $"INSERT INTO Car_Brand (ID, Value) VALUES (@Value1, @Value2)";
                 var parameters = new Dictionary<string, object>
                 {
                     { "@Value1", dataGridView.Rows.Count },
                     { "@Value2", temp }
                 };
-                var result = addDataMethod?.Invoke(databaseObject, new object[] { "Databases\\make.db", command, parameters });
+                Database.WriteData("Databases\\make.db", command, parameters);
                 populateTable(dataGridView);
             }
         }
         private static void DeleteEntry(object sender, EventArgs e)
         {
-            if (dataGridView.SelectedCells.Count == 1 ||
-                (dataGridView.SelectedCells.Count == 2 &&
-                dataGridView.SelectedCells[0].RowIndex == dataGridView.SelectedCells[1].RowIndex))
+            if (dataGridView.SelectedRows.Count == 1)
             {
                 var rowIndex = dataGridView.SelectedCells[0].RowIndex;
                 var rowData = dataGridView.Rows[rowIndex].Cells[1].Value;
                 DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowIndex + 1} - {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    MethodInfo addDataMethod = databaseObject.GetType().GetMethod("WriteData");
                     var command = $"DELETE FROM Car_Brand WHERE ID = @Value1 AND Value = @Value2";
                     var parameters = new Dictionary<string, object>
                 {
                     { "@Value1", rowIndex + 1},
                     { "@Value2", rowData }
                 };
-                    var result = addDataMethod?.Invoke(databaseObject, new object[] { "Databases\\make.db", command, parameters });
+                    Database.WriteData("Databases\\make.db", command, parameters);
                     populateTable(dataGridView);
                 }
             }

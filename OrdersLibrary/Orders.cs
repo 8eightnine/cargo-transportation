@@ -62,6 +62,7 @@ namespace Orders
             dataGridView1.RowHeadersWidth = 62;
             dataGridView1.Size = new System.Drawing.Size(780, 392);
             dataGridView1.TabIndex = 2;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView = dataGridView1;
             // 
             // contextMenuStrip
@@ -167,19 +168,12 @@ namespace Orders
 
         private static void AddNewEntry(object sender, EventArgs e)
         {
-            if (dataGridView.SelectedCells.Count == 1 ||
-                   (dataGridView.SelectedCells.Count == 9 &&
-                   dataGridView.SelectedCells[0].RowIndex == dataGridView.SelectedCells[1].RowIndex))
-            {
-
-            }
+            
         }
 
         private static void EditEntry(object sender, EventArgs e)
         {
-            if (dataGridView.SelectedCells.Count == 1 ||
-                    (dataGridView.SelectedCells.Count == 9 &&
-                    dataGridView.SelectedCells[0].RowIndex == dataGridView.SelectedCells[1].RowIndex))
+            if (dataGridView.SelectedRows.Count == 1)
             {
                 var rowIndex = dataGridView.SelectedCells[0].RowIndex;
                 DataRow dr = ((DataRowView)dataGridView.Rows[rowIndex].DataBoundItem).Row;

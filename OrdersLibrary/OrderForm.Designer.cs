@@ -51,7 +51,6 @@ namespace Orders
             this.label9 = new System.Windows.Forms.Label();
             this.CargoListGridView = new System.Windows.Forms.DataGridView();
             this.button2 = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.CargoListGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -221,7 +220,7 @@ namespace Orders
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(221, 29);
+            this.label8.Location = new System.Drawing.Point(372, 9);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(84, 13);
             this.label8.TabIndex = 16;
@@ -245,30 +244,23 @@ namespace Orders
             this.CargoListGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CargoListGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.CargoListGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.CargoListGridView.Location = new System.Drawing.Point(221, 52);
+            this.CargoListGridView.Location = new System.Drawing.Point(221, 25);
             this.CargoListGridView.MultiSelect = false;
             this.CargoListGridView.Name = "CargoListGridView";
             this.CargoListGridView.ReadOnly = true;
             this.CargoListGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CargoListGridView.Size = new System.Drawing.Size(379, 266);
+            this.CargoListGridView.Size = new System.Drawing.Size(387, 270);
             this.CargoListGridView.TabIndex = 19;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(487, 25);
+            this.button2.Location = new System.Drawing.Point(221, 298);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(113, 21);
+            this.button2.Size = new System.Drawing.Size(387, 21);
             this.button2.TabIndex = 20;
-            this.button2.Text = "Сменить";
+            this.button2.Text = "Изменить";
             this.button2.UseVisualStyleBackColor = true;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(360, 25);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 21;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // OrderForm
             // 
@@ -276,7 +268,6 @@ namespace Orders
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(620, 385);
-            this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.CargoListGridView);
             this.Controls.Add(this.label9);
@@ -330,6 +321,5 @@ namespace Orders
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.DataGridView CargoListGridView;
         private Button button2;
-        private ComboBox comboBox1;
     }
 }

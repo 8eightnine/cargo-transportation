@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cargo
 {
-    public class Class1
+    public class Cargo
     {
     }
 }
