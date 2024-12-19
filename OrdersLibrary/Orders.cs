@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Reflection;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using cargo_transportation.Classes;
 using cargo_transportation;
-using System.Linq;
+using cargo_transportation.Classes;
 
 namespace Orders
 {
@@ -14,7 +12,6 @@ namespace Orders
     {
         // Controls
         private static DataGridView dataGridView;
-        private static ContextMenuStrip contextMenuStrip;
         private static Button addNewButton;
         private static TextBox textBox;
 
@@ -74,7 +71,6 @@ namespace Orders
             EditToolStripMenuItem});
             contextMenuStrip1.Name = "contextMenuStrip";
             contextMenuStrip1.Size = new System.Drawing.Size(122, 48);
-            contextMenuStrip = contextMenuStrip1;
             // 
             // AddToolStripMenuItem
             // 
@@ -92,7 +88,7 @@ namespace Orders
             DeleteToolStripMenuItem.Name = "изToolStripMenuItem";
             DeleteToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
             DeleteToolStripMenuItem.Text = "Удалить";
-            //DeleteToolStripMenuItem.Click += new EventHandler(DeleteEntry);
+            DeleteToolStripMenuItem.Click += new EventHandler(DeleteEntry);
             if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().delete.Equals(0))
             {
                 DeleteToolStripMenuItem.Enabled = false;
@@ -162,15 +158,16 @@ namespace Orders
         {
             if (dataTable.Rows.Count > 0)
                 dataTable.Clear();
-            Database.ReadData("Databases\\make.db", "SELECT * FROM 'Order'", dataTable);
+            dataTable = Database.GetOrders();
             dataGridView.DataSource = dataTable;
         }
-
         private static void AddNewEntry(object sender, EventArgs e)
         {
-            
+            Order order = new Order();
+            order._isNew = 1;
+            OrderForm fo = new OrderForm(order);
+            fo.ShowDialog();
         }
-
         private static void EditEntry(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count == 1)
@@ -183,33 +180,27 @@ namespace Orders
                 fo.ShowDialog();
             }
         }
-
-        //private static void DeleteEntry(object sender, EventArgs e)
-        //{
-        //    if (dataGridView.SelectedCells.Count == 1 ||
-        //        (dataGridView.SelectedCells.Count == 2 &&
-        //        dataGridView.SelectedCells[0].RowIndex == dataGridView.SelectedCells[1].RowIndex))
-        //    {
-        //        var rowIndex = dataGridView.SelectedCells[0].RowIndex;
-        //        var rowData = dataGridView.Rows[rowIndex].Cells[1].Value;
-        //        DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowIndex + 1} - {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-        //        if (dialogResult == DialogResult.Yes)
-        //        {
-        //            MethodInfo addDataMethod = databaseObject.GetType().GetMethod("WriteData");
-        //            var command = $"DELETE FROM Car_Brand WHERE ID = @Value1 AND Value = @Value2";
-        //            var parameters = new Dictionary<string, object>
-        //        {
-        //            { "@Value1", rowIndex + 1},
-        //            { "@Value2", rowData }
-        //        };
-        //            var result = addDataMethod?.Invoke(databaseObject, new object[] { "Databases\\make.db", command, parameters });
-        //            populateTable(dataGridView);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Выберите одну запись для удаления.");
-        //    }
-        //}
+        private static void DeleteEntry(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count == 1)
+            {
+                var rowIndex = dataGridView.SelectedCells[0].RowIndex;
+                string rowData = "";
+                foreach (DataGridViewCell dataGridCell in dataGridView.Rows[rowIndex].Cells)
+                {
+                    rowData += $"{dataGridCell.Value.ToString()} - "; 
+                }
+                DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    Database.DeleteOrder(rowIndex + 1, dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
+                    populateTable(dataGridView);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите одну запись для удаления.");
+            }
+        }
     }
 }

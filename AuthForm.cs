@@ -60,12 +60,8 @@ namespace cargo_transportation
                     {
                         isAuthorized = true;
                         user = new User(_login, _password);
-                        DataTable rights = new DataTable();
-                        DataTable modules = new DataTable();
-                        string command = $"SELECT ModuleID, Read, Write, Edit, Del FROM Rights WHERE UserID = {id}";
-                        Database.ReadData("Databases\\users.db", command, rights);
-                        command = $"SELECT ID, Name FROM Menu";
-                        Database.ReadData("Databases\\users.db", command, modules);
+                        DataTable rights = Database.GetRights(id);
+                        DataTable modules = Database.GetModules();
                         user.AddRights(rights, modules);
                         Close();
                     }
@@ -80,7 +76,6 @@ namespace cargo_transportation
             catch (SQLiteException ex)
             {
                 MessageBox.Show(ex.Message);
-                //TODO: handle exception
             }
         }
 
@@ -135,7 +130,7 @@ namespace cargo_transportation
 
         }
 
-        #region НАВОДИМ КРАСОТУ
+        #region Интерфейс
 
         private void registerLabel_Click(object sender, EventArgs e)
         {
@@ -178,7 +173,7 @@ namespace cargo_transportation
         #endregion
 
 
-        // TODO: delete this later, maybe
+        // Вход без ввода данных - для тестирования
         private void LoginButton_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Middle)

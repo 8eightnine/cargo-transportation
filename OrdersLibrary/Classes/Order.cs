@@ -18,8 +18,8 @@ namespace Orders
         private string _clientAddress;
         private int _tripLength;
         private int _cost;
-        private int _cargoListID;
         private int _tripID;
+        public int _isNew = 0;
 
         // Cargo list
         //TODO
@@ -29,7 +29,7 @@ namespace Orders
 
         }
 
-        public Order(int iD, DateTime dateTime, string senderName, string senderAddress, int clientID, string clientAddress, int tripLength, int cost, int cargoListID, int tripId)
+        public Order(int iD, DateTime dateTime, string senderName, string senderAddress, int clientID, string clientAddress, int tripLength, int cost, int tripId)
         {
             _ID = iD;
             _orderDate = dateTime;
@@ -39,7 +39,6 @@ namespace Orders
             _clientAddress = clientAddress;
             _tripLength = tripLength;
             _cost = cost;
-            _cargoListID = cargoListID;
             _tripID = tripId;
         }
 
@@ -51,7 +50,6 @@ namespace Orders
         public string ClientAddress { get { return _clientAddress; } set { _clientAddress = value; } }
         public int TripLength { get { return _tripLength; } set { _tripLength = value; } }
         public int Cost { get { return _cost; } set { _cost = value; } }
-        public int CargoListID { get {return _cargoListID; } set {_cargoListID = value; } }
         public int TripID {  get { return _tripID; } set {_tripID = value; } }
 
 
@@ -71,37 +69,10 @@ namespace Orders
                 order._clientAddress = dr.ItemArray[5].ToString();
                 Int32.TryParse(dr.ItemArray[6].ToString(), out order._tripLength);
                 Int32.TryParse(dr.ItemArray[7].ToString(), out order._cost);
-                Int32.TryParse(dr.ItemArray[8].ToString(), out order._cargoListID);
-                Int32.TryParse(dr.ItemArray[9].ToString(), out order._tripID);
+                Int32.TryParse(dr.ItemArray[8].ToString(), out order._tripID);
                 
                 return order;
             }
-        }
-
-        // TODO!
-        public int CheckForValidity()
-        {
-            return 0;
-        }
-
-        // TODO!
-        public Dictionary<string, object> ToParameters()
-        {
-            var parameters = new Dictionary<string, object>()
-            {
-                { "@Value1", "test"},
-                { "@Value2", "test"},
-                { "@Value3", "test"},
-                { "@Value4", "test"},
-                { "@Value5", "test"},
-                { "@Value6", "test"},
-                { "@Value7", "test"},
-                { "@Value8", "test"},
-                { "@Value9", "test"},
-                { "@Value10", "test"},
-            };
-            
-            return parameters;
         }
     }
 }

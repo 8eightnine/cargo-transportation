@@ -146,7 +146,7 @@ namespace DriverCategory
         {
             if (dataTable.Rows.Count > 0)
                 dataTable.Clear();
-            Database.ReadData("Databases\\make.db", "SELECT * FROM 'Category_List'", dataTable);
+            dataTable = Database.GetValues("Category_List");
             dataGridView.DataSource = dataTable;
         }
         private static void AddNewEntry(object sender, EventArgs e)

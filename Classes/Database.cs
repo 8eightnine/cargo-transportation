@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace cargo_transportation.Classes
@@ -127,5 +124,66 @@ namespace cargo_transportation.Classes
 
             return result;
         }
+
+        public static DataTable GetRights(int userid)
+        {
+            DataTable table = new DataTable();
+            string command = $"SELECT ModuleID, Read, Write, Edit, Del FROM Rights WHERE UserID = {userid}";
+            Database.ReadData("Databases\\users.db", command, table);
+            return table;
+        }
+
+        public static DataTable GetModules()
+        {
+            DataTable table = new DataTable();
+            string command = $"SELECT ID, Name FROM Menu";
+            Database.ReadData("Databases\\users.db", command, table);
+            return table;
+        }
+
+        public static DataTable GetOrders()
+        {
+            DataTable table = new DataTable();
+            Database.ReadData("Databases\\make.db", "SELECT * FROM 'Order'", table);
+            table.Columns[0].ColumnName = "ID";
+            table.Columns[1].ColumnName = "Дата заказа";
+            table.Columns[2].ColumnName = "Отправитель";
+            table.Columns[3].ColumnName = "Адрес отправителя";
+            table.Columns[4].ColumnName = "ID получателя";
+            table.Columns[5].ColumnName = "Адрес получателя";
+            table.Columns[6].ColumnName = "Длина маршрута";
+            table.Columns[7].ColumnName = "Стоимость заказа";
+            table.Columns[8].ColumnName = "ID поездки";
+            return table;
+        }
+
+        public static void DeleteOrder(int id, string value)
+        {
+            var command = $"DELETE FROM 'Order' WHERE ID = @Value1 AND Sender = @Value2";
+            var parameters = new Dictionary<string, object>
+                    {
+                        { "@Value1", id},
+                        { "@Value2", value }
+                    };
+            Database.WriteData("Databases\\make.db", command, parameters);
+        }
+
+        public static DataTable GetValues(string database)
+        {
+            DataTable table = new DataTable();
+            Database.ReadData("Databases\\make.db", $"SELECT * FROM '{database}'", table);
+            table.Columns[0].ColumnName = "ID";
+            table.Columns[1].ColumnName = "Значение";
+            return table;
+        }
+
+
+
+
+
+
+
+
+
     }
 }

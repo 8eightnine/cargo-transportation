@@ -150,7 +150,7 @@ namespace DriverClass
         {
             if (dataTable.Rows.Count > 0)
                 dataTable.Clear();
-            Database.ReadData("Databases\\make.db", "SELECT * FROM 'Class_List'", dataTable);
+            dataTable = Database.GetValues("Class_List");
             dataGridView.DataSource = dataTable;
         }
         private static void AddNewEntry(object sender, EventArgs e)
@@ -160,7 +160,7 @@ namespace DriverClass
             string temp = fo.valueToChange;
             if (temp != null)
             {
-                var command = $"INSERT INTO Class_List (ID, Value) VALUES (@Value1, @Value2)";
+                var command = $"INSERT INTO Class_List (ID, Name) VALUES (@Value1, @Value2)";
                 var parameters = new Dictionary<string, object>
                 {
                     { "@Value1", dataGridView.Rows.Count },

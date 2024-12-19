@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace CarBrands
 {
-    public class DriverClass
+    public class CarBrands
     {
         // Controls
         private static DataGridView dataGridView;
@@ -146,7 +146,7 @@ namespace CarBrands
         {
             if (dataTable.Rows.Count > 0)
                 dataTable.Clear();
-            Database.ReadData("Databases\\make.db", "SELECT * FROM 'Car_Brand'", dataTable);
+            dataTable = Database.GetValues("Car_Brand");
             dataGridView.DataSource = dataTable;
         }
         private static void AddNewEntry(object sender, EventArgs e)

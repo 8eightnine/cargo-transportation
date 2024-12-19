@@ -50,7 +50,6 @@ namespace Orders
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.CargoListGridView = new System.Windows.Forms.DataGridView();
-            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.CargoListGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -220,7 +219,7 @@ namespace Orders
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(372, 9);
+            this.label8.Location = new System.Drawing.Point(369, 9);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(84, 13);
             this.label8.TabIndex = 16;
@@ -249,18 +248,8 @@ namespace Orders
             this.CargoListGridView.Name = "CargoListGridView";
             this.CargoListGridView.ReadOnly = true;
             this.CargoListGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.CargoListGridView.Size = new System.Drawing.Size(387, 270);
+            this.CargoListGridView.Size = new System.Drawing.Size(387, 293);
             this.CargoListGridView.TabIndex = 19;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(221, 298);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(387, 21);
-            this.button2.TabIndex = 20;
-            this.button2.Text = "Изменить";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // OrderForm
             // 
@@ -268,7 +257,6 @@ namespace Orders
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(620, 385);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.CargoListGridView);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
@@ -320,6 +308,5 @@ namespace Orders
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.DataGridView CargoListGridView;
-        private Button button2;
     }
 }

@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trips", "TripsLibrary\Trips
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysClients", "PhysClientsLibrary\PhysClients.csproj", "{FC971C0C-F3E5-44B9-B6D7-F7968D82AEE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Management", "..\Management\Management.csproj", "{FBAA2AC4-86E7-45F2-BC59-F892B186892C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{FC971C0C-F3E5-44B9-B6D7-F7968D82AEE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC971C0C-F3E5-44B9-B6D7-F7968D82AEE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC971C0C-F3E5-44B9-B6D7-F7968D82AEE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBAA2AC4-86E7-45F2-BC59-F892B186892C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBAA2AC4-86E7-45F2-BC59-F892B186892C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBAA2AC4-86E7-45F2-BC59-F892B186892C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBAA2AC4-86E7-45F2-BC59-F892B186892C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
