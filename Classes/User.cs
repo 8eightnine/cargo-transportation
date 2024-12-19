@@ -32,7 +32,11 @@ namespace cargo_transportation.Classes
         {
             set
             {
-                Password = Hash.Hash.hashPassword(value);
+                _password = Hash.hashPassword(value);
+            }
+            get
+            {
+                return _password;
             }
         }
         public string Login
@@ -69,7 +73,7 @@ namespace cargo_transportation.Classes
         {
             this.rights = new Rights[rules.Rows.Count];
             //MessageBox.Show(rules.Rows.Count.ToString());
-            for (int i = 0; i < rules.Rows.Count - 1; i++)
+            for (int i = 0; i < rules.Rows.Count; i++)
             {
                 int libID = Int32.Parse(rules.Rows[i].ItemArray[0].ToString());
                 // Присваиваем права

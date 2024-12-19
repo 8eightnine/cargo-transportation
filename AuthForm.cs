@@ -1,5 +1,4 @@
 ﻿using cargo_transportation.Classes;
-using cargo_transportation.Classes.Hash;
 using System;
 using System.Data;
 using System.Data.SQLite;
@@ -179,7 +178,7 @@ namespace cargo_transportation
             if (e.Button == MouseButtons.Middle)
             {
                 user = new User(_login, _password);
-                loginBox.Text = passwordBox.Text = "user1";
+                loginBox.Text = passwordBox.Text = "admin";
                 LoginButton.PerformClick();
             }
         }

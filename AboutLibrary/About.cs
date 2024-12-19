@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using cargo_transportation;
 
 namespace About
 {
@@ -15,11 +16,11 @@ namespace About
         private static Button developerButton;
         private static PictureBox pictureBox;
         private static WebBrowser webBrowser;
-        private static Form _mainForm;
+        private static MainForm _mainForm;
 
 
         // Функция для отрисовки элементов управления
-        public static void ShowAbout(Form mainForm)
+        public static void ShowAbout(MainForm mainForm)
         {
                 _mainForm = mainForm;
                 var richTextBox1 = new RichTextBox();
@@ -41,7 +42,7 @@ namespace About
                 richTextBox1.Size = new Size(689, 160);
                 richTextBox1.TabIndex = 0;
                 richTextBox1.ReadOnly = true;
-                richTextBox1.Anchor = ((AnchorStyles)(((AnchorStyles.Bottom | AnchorStyles.Left) | AnchorStyles.Right)));
+                richTextBox1.Anchor = ((AnchorStyles.Bottom | AnchorStyles.Left) | AnchorStyles.Right);
                 mainTextBox = richTextBox1;
                 // 
                 // button1
@@ -53,7 +54,7 @@ namespace About
                 button1.TabIndex = 1;
                 button1.Text = "О программе";
                 button1.UseVisualStyleBackColor = true;
-                button1.Anchor = ((AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left));
+                button1.Anchor = ((AnchorStyles.Top | AnchorStyles.Left));
                 aboutButton = button1;
                 // 
                 // button2
@@ -65,7 +66,7 @@ namespace About
                 button2.TabIndex = 2;
                 button2.Text = "Разработчик";
                 button2.UseVisualStyleBackColor = true;
-                button2.Anchor = ((AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left));
+                button2.Anchor = ((AnchorStyles.Top | AnchorStyles.Left));
                 developerButton = button2;
                 // 
                 // pictureBox1
@@ -77,7 +78,7 @@ namespace About
                 pictureBox1.TabIndex = 3;
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
                 pictureBox1.TabStop = false;
-                pictureBox1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right)));
+                pictureBox1.Anchor = (((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right);
                 pictureBox = pictureBox1;
                 // 
                 // webBrowser1
@@ -88,8 +89,8 @@ namespace About
                 webBrowser1.Size = new Size(689, 422);
                 webBrowser1.TabIndex = 5;
                 webBrowser1.Visible = false;
-                webBrowser1.Url = new Uri("https://glowing-alfajores-408db9.netlify.app/", UriKind.Absolute);
-                webBrowser1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right)));
+                webBrowser1.Url = new Uri("https://8eightnine.github.io/cargo-transportation/", UriKind.Absolute);
+                webBrowser1.Anchor = (((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Left) | AnchorStyles.Right);
                 webBrowser = webBrowser1;
                 ((System.ComponentModel.ISupportInitialize)(pictureBox1)).EndInit();
                 //
@@ -118,6 +119,17 @@ namespace About
                 mainForm.ResumeLayout();
                 mainForm.PerformLayout();
                 mainForm.Text = "ИС ООО \"Перевозки и КО\" | Справка";
+        }
+
+        public static void ShowManagement(MainForm mainForm)
+        {
+            MessageBox.Show("TEST");
+        }
+
+        public static void ChangePassword(MainForm mainForm)
+        {
+            ChangePasswordForm cpass = new ChangePasswordForm(mainForm.currentUser);
+            cpass.ShowDialog();
         }
 
         private static void Button1_Click(object sender, EventArgs e)

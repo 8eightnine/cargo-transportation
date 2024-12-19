@@ -140,7 +140,7 @@ namespace DriverClass
             StringBuilder sb = new StringBuilder();
             foreach (DataGridViewColumn column in dataGridView.Columns)
             {
-                sb.AppendFormat("CONVERT({0}, System.String) LIKE '%{1}%' OR ", column.Name, textBox.Text);
+                sb.AppendFormat("CONVERT([{0}], System.String) LIKE '%{1}%' OR ", column.Name, textBox.Text);
             }
             sb.Remove(sb.Length - 3, 3);
             (dataGridView.DataSource as DataTable).DefaultView.RowFilter = sb.ToString();

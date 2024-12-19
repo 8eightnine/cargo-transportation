@@ -1,20 +1,20 @@
 ﻿
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace cargo_transportation.Classes.Hash
+namespace cargo_transportation.Classes
 {
-    internal static class Hash
+    public static class Hash
     {
         public static string hashPassword(string password)
         {
-            MD5 md5 = MD5.Create();
-            byte[] b = Encoding.ASCII.GetBytes(password);
-            byte[] hash = md5.ComputeHash(b);
-            StringBuilder sb = new StringBuilder();
-            foreach (var a in hash)
-                sb.Append(a.ToString("X2"));
-            return sb.ToString();
+            using (var hash = SHA1.Create())
+            {
+                string temp = string.Concat(hash.ComputeHash(Encoding.UTF8.GetBytes(password)).Select(x => x.ToString("X2")));
+                hash.Dispose();
+                return temp;
+            }
         }
     }
 }

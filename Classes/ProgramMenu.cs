@@ -79,8 +79,6 @@ namespace cargo_transportation.Classes
 
             dt.Dispose();
             return strip.Items;
-            
-
         }
 
         private void MenuItemClickHandler(object sender, EventArgs e)

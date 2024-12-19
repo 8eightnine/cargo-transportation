@@ -129,7 +129,7 @@ namespace cargo_transportation.Classes
         {
             DataTable table = new DataTable();
             string command = $"SELECT ModuleID, Read, Write, Edit, Del FROM Rights WHERE UserID = {userid}";
-            Database.ReadData("Databases\\users.db", command, table);
+            ReadData("Databases\\users.db", command, table);
             return table;
         }
 
@@ -137,14 +137,14 @@ namespace cargo_transportation.Classes
         {
             DataTable table = new DataTable();
             string command = $"SELECT ID, Name FROM Menu";
-            Database.ReadData("Databases\\users.db", command, table);
+            ReadData("Databases\\users.db", command, table);
             return table;
         }
 
         public static DataTable GetOrders()
         {
             DataTable table = new DataTable();
-            Database.ReadData("Databases\\make.db", "SELECT * FROM 'Order'", table);
+            ReadData("Databases\\make.db", "SELECT * FROM 'Order'", table);
             table.Columns[0].ColumnName = "ID";
             table.Columns[1].ColumnName = "Дата заказа";
             table.Columns[2].ColumnName = "Отправитель";
@@ -157,6 +157,16 @@ namespace cargo_transportation.Classes
             return table;
         }
 
+        public static DataTable GetTrips()
+        {
+            DataTable table = new DataTable();
+            ReadData("Databases\\make.db", "SELECT * FROM 'Trip'", table);
+            table.Columns[0].ColumnName = "ID";
+            table.Columns[1].ColumnName = "ID машины";
+            table.Columns[2].ColumnName = "Дата доставки";
+            return table;
+        }
+
         public static void DeleteOrder(int id, string value)
         {
             var command = $"DELETE FROM 'Order' WHERE ID = @Value1 AND Sender = @Value2";
@@ -165,25 +175,129 @@ namespace cargo_transportation.Classes
                         { "@Value1", id},
                         { "@Value2", value }
                     };
-            Database.WriteData("Databases\\make.db", command, parameters);
+            WriteData("Databases\\make.db", command, parameters);
+        }
+
+        public static void DeleteTrip(int id, string value)
+        {
+            var command = $"DELETE FROM 'Trip' WHERE ID = @Value1 AND ArrivalDate = @Value2";
+            var parameters = new Dictionary<string, object>
+                    {
+                        { "@Value1", id},
+                        { "@Value2", value }
+                    };
+            WriteData("Databases\\make.db", command, parameters);
         }
 
         public static DataTable GetValues(string database)
         {
             DataTable table = new DataTable();
-            Database.ReadData("Databases\\make.db", $"SELECT * FROM '{database}'", table);
+            ReadData("Databases\\make.db", $"SELECT * FROM '{database}'", table);
             table.Columns[0].ColumnName = "ID";
             table.Columns[1].ColumnName = "Значение";
             return table;
         }
 
+        public static void UpdateUser(User user)
+        {
+            string command = $"UPDATE Users SET Password = '{user.Password}' WHERE Username = '{user.Login}'";
+            WriteData("Databases\\users.db", command, null);
+        }
 
+        public static DataTable GetPhysClients()
+        {
+            DataTable table = new DataTable();
+            ReadData("Databases\\make.db", "SELECT * FROM 'Phys_Person'", table);
+            table.Columns[0].ColumnName = "ID";
+            table.Columns[1].ColumnName = "ФИО";
+            table.Columns[2].ColumnName = "Контактный номер";
+            table.Columns[3].ColumnName = "Паспорт";
+            table.Columns[4].ColumnName = "Дата выдачи";
+            table.Columns[5].ColumnName = "Кем выдано";
+            return table;
+        }
 
+        public static void DeletePhysClient(int id, string value)
+        {
+            var command = $"DELETE FROM 'Phys_Person' WHERE ID = @Value1 AND PhoneNumber = @Value2";
+            var parameters = new Dictionary<string, object>
+                    {
+                        { "@Value1", id},
+                        { "@Value2", value }
+                    };
+            WriteData("Databases\\make.db", command, parameters);
+        }
 
+        public static DataTable GetCompanyClients()
+        {
+            DataTable table = new DataTable();
+            ReadData("Databases\\make.db", "SELECT * FROM 'Company_Person'", table);
+            table.Columns[0].ColumnName = "ID";
+            table.Columns[1].ColumnName = "ФИО контакта";
+            table.Columns[2].ColumnName = "ФИО директора";
+            table.Columns[3].ColumnName = "Адрес регистрации";
+            table.Columns[4].ColumnName = "Контактный номер";
+            table.Columns[5].ColumnName = "ID банка";
+            table.Columns[6].ColumnName = "Номер банковского счета";
+            return table;
+        }
 
+        public static void DeleteCompanyClient(int id, string value)
+        {
+            var command = $"DELETE FROM 'Company_Person' WHERE ID = @Value1 AND NameOfCEO = @Value2";
+            var parameters = new Dictionary<string, object>
+                    {
+                        { "@Value1", id},
+                        { "@Value2", value }
+                    };
+            WriteData("Databases\\make.db", command, parameters);
+        }
 
+        public static DataTable GetCargo()
+        {
+            DataTable table = new DataTable();
+            ReadData("Databases\\make.db", "SELECT * FROM 'Cargo'", table);
+            table.Columns[0].ColumnName = "ID";
+            table.Columns[1].ColumnName = "Название";
+            table.Columns[2].ColumnName = "Единица измерения";
+            table.Columns[3].ColumnName = "Вес";
 
+            return table;
+        }
 
+        public static void DeleteCargo(int id, string value)
+        {
+            var command = $"DELETE FROM 'Cargo' WHERE ID = @Value1 AND Name = @Value2";
+            var parameters = new Dictionary<string, object>
+                    {
+                        { "@Value1", id},
+                        { "@Value2", value }
+                    };
+            WriteData("Databases\\make.db", command, parameters);
+        }
 
+        public static DataTable GetCargoLists()
+        {
+            DataTable table = new DataTable();
+            ReadData("Databases\\make.db", "SELECT * FROM 'Cargo_List'", table);
+            table.Columns[0].ColumnName = "ID";
+            table.Columns[1].ColumnName = "ID заказа";
+            table.Columns[2].ColumnName = "ID груза";
+            table.Columns[3].ColumnName = "Страховая стоимость";
+            table.Columns[4].ColumnName = "Количество";
+
+            return table;
+        }
+
+        public static void DeleteCargoList(int id, string value)
+        {
+            var command = $"DELETE FROM 'Cargo_List' WHERE ID = @Value1 AND CargoID = @Value2";
+            var parameters = new Dictionary<string, object>
+                    {
+                        { "@Value1", id},
+                        { "@Value2", value }
+                    };
+            WriteData("Databases\\make.db", command, parameters);
+        }
     }
 }

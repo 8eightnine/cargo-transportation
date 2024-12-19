@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CompanyClients
+namespace Trips.Classes
 {
-    public class Class1
+    internal class Trip
     {
     }
 }

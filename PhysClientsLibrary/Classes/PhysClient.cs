@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Trips
+namespace PhysClients.Classes
 {
-    public class Class1
+    internal class PhysClient
     {
     }
 }

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clients
+namespace CarPark
 {
-    public class Class1
+    public class CarPark
     {
     }
 }

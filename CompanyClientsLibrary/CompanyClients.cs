@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using cargo_transportation;
 using cargo_transportation.Classes;
 
-namespace Orders
+namespace CompanyClients
 {
-    public class Orders
+    public class CompanyClients
     {
         // Controls
         private static DataGridView dataGridView;
@@ -21,9 +21,9 @@ namespace Orders
         internal static User currentUser;
         internal static MainForm _mainForm;
         internal static string moduleName;
-        internal Order order;
+        //internal PhysClient client;
 
-        public static void ShowOrders(MainForm mainForm)
+        public static void ShowCompanyClients(MainForm mainForm)
         {
             #region Designer
             currentUser = mainForm.currentUser;
@@ -158,27 +158,27 @@ namespace Orders
         {
             if (dataTable.Rows.Count > 0)
                 dataTable.Clear();
-            dataTable = Database.GetOrders();
+            dataTable = Database.GetCompanyClients();
             dataGridView.DataSource = dataTable;
         }
         private static void AddNewEntry(object sender, EventArgs e)
         {
-            Order order = new Order();
-            order._isNew = 1;
-            OrderForm fo = new OrderForm(order);
-            fo.ShowDialog();
+            //Order order = new Order();
+            //order._isNew = 1;
+            //OrderForm fo = new OrderForm(order);
+            //fo.ShowDialog();
         }
         private static void EditEntry(object sender, EventArgs e)
         {
-            if (dataGridView.SelectedRows.Count == 1)
-            {
-                var rowIndex = dataGridView.SelectedCells[0].RowIndex;
-                DataRow dr = ((DataRowView)dataGridView.Rows[rowIndex].DataBoundItem).Row;
-                Order order;
-                order = Order.ParseToOrder(dr);
-                OrderForm fo = new OrderForm(order);
-                fo.ShowDialog();
-            }
+            //if (dataGridView.SelectedRows.Count == 1)
+            //{
+            //    var rowIndex = dataGridView.SelectedCells[0].RowIndex;
+            //    DataRow dr = ((DataRowView)dataGridView.Rows[rowIndex].DataBoundItem).Row;
+            //    Order order;
+            //    order = Order.ParseToOrder(dr);
+            //    OrderForm fo = new OrderForm(order);
+            //    fo.ShowDialog();
+            //}
         }
         private static void DeleteEntry(object sender, EventArgs e)
         {
@@ -188,12 +188,12 @@ namespace Orders
                 string rowData = "";
                 foreach (DataGridViewCell dataGridCell in dataGridView.Rows[rowIndex].Cells)
                 {
-                    rowData += $"{dataGridCell.Value.ToString()} - "; 
+                    rowData += $"{dataGridCell.Value.ToString()} - ";
                 }
                 DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Database.DeleteOrder(rowIndex + 1, dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
+                    Database.DeleteCompanyClient(rowIndex + 1, dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
                     populateTable(dataGridView);
                 }
             }
