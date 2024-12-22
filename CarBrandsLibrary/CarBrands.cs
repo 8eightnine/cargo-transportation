@@ -46,6 +46,7 @@ namespace CarBrands
             // dataGridView
             // 
             dataGridView1.AllowUserToOrderColumns = true;
+            dataGridView1.AllowUserToAddRows = false;
             dataGridView1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom)
             | AnchorStyles.Left)
             | AnchorStyles.Right)));
@@ -172,13 +173,13 @@ namespace CarBrands
             {
                 var rowIndex = dataGridView.SelectedCells[0].RowIndex;
                 var rowData = dataGridView.Rows[rowIndex].Cells[1].Value;
-                DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowIndex + 1} - {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {Int32.Parse(dataGridView.Rows[rowIndex].Cells[0].Value.ToString())} - {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
                     var command = $"DELETE FROM Car_Brand WHERE ID = @Value1 AND Value = @Value2";
                     var parameters = new Dictionary<string, object>
                 {
-                    { "@Value1", rowIndex + 1},
+                    { "@Value1", Int32.Parse(dataGridView.Rows[rowIndex].Cells[0].Value.ToString())},
                     { "@Value2", rowData }
                 };
                     Database.WriteData("Databases\\make.db", command, parameters);

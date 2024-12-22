@@ -29,19 +29,6 @@ namespace Orders
 
         }
 
-        public Order(int iD, DateTime dateTime, string senderName, string senderAddress, int clientID, string clientAddress, int tripLength, int cost, int tripId)
-        {
-            _ID = iD;
-            _orderDate = dateTime;
-            _senderName = senderName;
-            _senderAddress = senderAddress;
-            _clientID = clientID;
-            _clientAddress = clientAddress;
-            _tripLength = tripLength;
-            _cost = cost;
-            _tripID = tripId;
-        }
-
         public int ID { get { return _ID; } }
         public DateTime OrderDate { get { return _orderDate; } set { _orderDate = value; } }
         public string SenderName {  get { return _senderName; } set { _senderName = value; } }

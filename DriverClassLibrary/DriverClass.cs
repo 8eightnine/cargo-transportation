@@ -49,6 +49,7 @@ namespace DriverClass
             // dataGridView
             // 
             dataGridView1.AllowUserToOrderColumns = true;
+            dataGridView1.AllowUserToAddRows = false;
             dataGridView1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom)
             | AnchorStyles.Left)
             | AnchorStyles.Right)));
@@ -160,10 +161,9 @@ namespace DriverClass
             string temp = fo.valueToChange;
             if (temp != null)
             {
-                var command = $"INSERT INTO Class_List (ID, Name) VALUES (@Value1, @Value2)";
+                var command = $"INSERT INTO Class_List (Name) VALUES (@Value2)";
                 var parameters = new Dictionary<string, object>
                 {
-                    { "@Value1", dataGridView.Rows.Count },
                     { "@Value2", temp }
                 };
                 Database.WriteData("Databases\\make.db", command, parameters);
@@ -182,7 +182,7 @@ namespace DriverClass
                     var command = $"DELETE FROM Class_List WHERE ID = @Value1 AND Value = @Value2";
                     var parameters = new Dictionary<string, object>
                     {
-                        { "@Value1", rowIndex + 1},
+                        { "@Value1", Int32.Parse(dataGridView.Rows[rowIndex].Cells[0].Value.ToString())},
                         { "@Value2", rowData }
                     };
                     Database.WriteData("Databases\\make.db", command, parameters);

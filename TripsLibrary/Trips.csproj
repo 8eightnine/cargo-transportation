@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -44,6 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Trip.cs" />
+    <Compile Include="TripForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TripForm.Designer.cs">
+      <DependentUpon>TripForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Trips.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -52,6 +58,11 @@
       <Project>{37a91009-1b11-4f4d-851b-38ebaad9ec69}</Project>
       <Name>! cargo-transportation</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TripForm.resx">
+      <DependentUpon>TripForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

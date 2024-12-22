@@ -39,9 +39,12 @@ namespace Cargo
             var menuStrip1 = new MenuStrip();
             var contextMenuStrip1 = new ContextMenuStrip(components1);
             var contextMenuStrip2 = new ContextMenuStrip(components2);
-            var AddToolStripMenuItem = new ToolStripMenuItem();
-            var DeleteToolStripMenuItem = new ToolStripMenuItem();
-            var EditToolStripMenuItem = new ToolStripMenuItem();
+            var AddItemToolStripMenuItem = new ToolStripMenuItem();
+            var AddListToolStripMenuItem = new ToolStripMenuItem();
+            var DeleteItemToolStripMenuItem = new ToolStripMenuItem();
+            var DeleteListToolStripMenuItem = new ToolStripMenuItem();
+            var EditItemToolStripMenuItem = new ToolStripMenuItem();
+            var EditListToolStripMenuItem = new ToolStripMenuItem();
             var addNewEntryButton = new Button();
             var textBox1 = new TextBox();
             var textBox2 = new TextBox();
@@ -56,13 +59,15 @@ namespace Cargo
             // dataGridView1
             //
             dataGridView1.AllowUserToOrderColumns = true;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.ReadOnly = true;
             dataGridView1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom)
             | AnchorStyles.Left)
             | AnchorStyles.Right)));
             dataGridView1.AutoGenerateColumns = true;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.ContextMenuStrip = contextMenuStrip1;
+            dataGridView1.ContextMenuStrip = contextMenuStrip2;
             dataGridView1.Location = new System.Drawing.Point(12, 56);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.Size = new System.Drawing.Size(385, 368);
@@ -73,13 +78,15 @@ namespace Cargo
             // dataGridView2
             // 
             dataGridView2.AllowUserToOrderColumns = true;
+            dataGridView2.AllowUserToAddRows = false;
+            dataGridView2.ReadOnly = true;
             dataGridView2.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom)
             | AnchorStyles.Left)
             | AnchorStyles.Right)));
             dataGridView2.AutoGenerateColumns = true;
             dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.ContextMenuStrip = contextMenuStrip2;
+            dataGridView2.ContextMenuStrip = contextMenuStrip1;
             dataGridView2.Location = new System.Drawing.Point(405, 56);
             dataGridView2.Name = "dataGridView2";
             dataGridView2.Size = new System.Drawing.Size(385, 368);
@@ -87,57 +94,90 @@ namespace Cargo
             dataGridView2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridViewCargo = dataGridView2;
             // 
-            // contextMenuStrip1
+            // contextMenuStrip1 - LISTS
             // 
             contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] {
-            AddToolStripMenuItem,
-            DeleteToolStripMenuItem,
-            EditToolStripMenuItem});
-            contextMenuStrip1.Name = "contextMenuStrip";
-            contextMenuStrip1.Size = new System.Drawing.Size(122, 48);
-            // 
-            // contextMenuStrip2
-            // 
-            contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
-            contextMenuStrip1.Items.AddRange(new ToolStripItem[] {
-            AddToolStripMenuItem,
-            DeleteToolStripMenuItem,
-            EditToolStripMenuItem});
+            AddListToolStripMenuItem,
+            DeleteListToolStripMenuItem,
+            EditListToolStripMenuItem});
             contextMenuStrip1.Name = "contextMenuStrip";
             contextMenuStrip1.Size = new System.Drawing.Size(122, 48);
             // 
             // AddToolStripMenuItem
             // 
-            AddToolStripMenuItem.Name = "AddToolStripMenuItem";
-            AddToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            AddToolStripMenuItem.Text = "Добавить";
-            AddToolStripMenuItem.Click += new EventHandler(AddNewEntryList);
+            AddListToolStripMenuItem.Name = "AddToolStripMenuItem";
+            AddListToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            AddListToolStripMenuItem.Text = "Добавить";
+            AddListToolStripMenuItem.Click += new EventHandler(AddNewEntryItem);
             if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().write.Equals(0))
             {
-                AddToolStripMenuItem.Enabled = false;
+                AddListToolStripMenuItem.Enabled = false;
             }
             // 
             // DeleteToolStripMenuItem
             // 
-            DeleteToolStripMenuItem.Name = "изToolStripMenuItem";
-            DeleteToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            DeleteToolStripMenuItem.Text = "Удалить";
-            DeleteToolStripMenuItem.Click += new EventHandler(DeleteEntryList);
+            DeleteListToolStripMenuItem.Name = "изToolStripMenuItem";
+            DeleteListToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            DeleteListToolStripMenuItem.Text = "Удалить";
+            DeleteListToolStripMenuItem.Click += new EventHandler(DeleteEntryItem);
             if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().delete.Equals(0))
             {
-                DeleteToolStripMenuItem.Enabled = false;
+                DeleteListToolStripMenuItem.Enabled = false;
             }
             // 
             // EditToolStripMenuItem
             // 
-            EditToolStripMenuItem.Name = "EditToolStripMenuItem";
-            EditToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            EditToolStripMenuItem.Text = "Изменить";
-            EditToolStripMenuItem.Click += new EventHandler(EditEntry);
+            EditListToolStripMenuItem.Name = "EditToolStripMenuItem";
+            EditListToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            EditListToolStripMenuItem.Text = "Изменить";
+            EditListToolStripMenuItem.Click += new EventHandler(EditEntryItem);
             if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().edit.Equals(0))
             {
-                EditToolStripMenuItem.Enabled = false;
+                EditListToolStripMenuItem.Enabled = false;
+            }
+            // 
+            // contextMenuStrip2 - ITEMS
+            // 
+            contextMenuStrip2.ImageScalingSize = new System.Drawing.Size(24, 24);
+            contextMenuStrip2.Items.AddRange(new ToolStripItem[] {
+            AddItemToolStripMenuItem,
+            DeleteItemToolStripMenuItem,
+            EditItemToolStripMenuItem});
+            contextMenuStrip2.Name = "contextMenuStrip";
+            contextMenuStrip2.Size = new System.Drawing.Size(122, 48);
+            // 
+            // AddToolStripMenuItem
+            // 
+            AddItemToolStripMenuItem.Name = "AddToolStripMenuItem";
+            AddItemToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            AddItemToolStripMenuItem.Text = "Добавить";
+            AddItemToolStripMenuItem.Click += new EventHandler(AddNewEntryList);
+            if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().write.Equals(0))
+            {
+                AddItemToolStripMenuItem.Enabled = false;
+            }
+            // 
+            // DeleteToolStripMenuItem
+            // 
+            DeleteItemToolStripMenuItem.Name = "изToolStripMenuItem";
+            DeleteItemToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            DeleteItemToolStripMenuItem.Text = "Удалить";
+            DeleteItemToolStripMenuItem.Click += new EventHandler(DeleteEntryList);
+            if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().delete.Equals(0))
+            {
+                DeleteItemToolStripMenuItem.Enabled = false;
+            }
+            // 
+            // EditToolStripMenuItem
+            // 
+            EditItemToolStripMenuItem.Name = "EditToolStripMenuItem";
+            EditItemToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            EditItemToolStripMenuItem.Text = "Изменить";
+            EditItemToolStripMenuItem.Click += new EventHandler(EditEntryList);
+            if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().edit.Equals(0))
+            {
+                EditItemToolStripMenuItem.Enabled = false;
             }
             // 
             // textBox
@@ -205,7 +245,7 @@ namespace Cargo
             contextMenuStrip1.ResumeLayout(false);
             mainForm.ResumeLayout();
             mainForm.PerformLayout();
-            mainForm.Text = "ИС ООО \"Перевозки и КО\" | Заказы";
+            mainForm.Text = "ИС ООО \"Перевозки и КО\" | Грузы";
             #endregion
 
             populateTableLists(dataGridViewList);
@@ -250,33 +290,47 @@ namespace Cargo
         }
         private static void AddNewEntryList(object sender, EventArgs e)
         {
-            //Order order = new Order();
-            //order._isNew = 1;
-            //OrderForm fo = new OrderForm(order);
-            //fo.ShowDialog();
+            CargoList newList = new CargoList();
+            newList._isNew = 1;
+            NewListForm fo = new NewListForm(newList);
+            fo.ShowDialog();
         }
-        private static void AddNewEntryCargo(object sender, EventArgs e)
+        private static void AddNewEntryItem(object sender, EventArgs e)
         {
-            //Order order = new Order();
-            //order._isNew = 1;
-            //OrderForm fo = new OrderForm(order);
-            //fo.ShowDialog();
+            CargoItem newItem = new CargoItem();
+            newItem._isNew = 1;
+            NewCargoForm fo = new NewCargoForm(newItem);
+            fo.ShowDialog();
+            populateTableCargo(dataGridViewCargo);
         }
-        private static void EditEntry(object sender, EventArgs e)
+        private static void EditEntryList(object sender, EventArgs e)
         {
-            //if (dataGridView.SelectedRows.Count == 1)
-            //{
-            //    var rowIndex = dataGridView.SelectedCells[0].RowIndex;
-            //    DataRow dr = ((DataRowView)dataGridView.Rows[rowIndex].DataBoundItem).Row;
-            //    Order order;
-            //    order = Order.ParseToOrder(dr);
-            //    OrderForm fo = new OrderForm(order);
-            //    fo.ShowDialog();
-            //}
+            if (dataGridViewList.SelectedRows.Count == 1)
+            {
+                var rowIndex = dataGridViewList.SelectedCells[0].RowIndex;
+                DataRow dr = ((DataRowView)dataGridViewList.Rows[rowIndex].DataBoundItem).Row;
+                CargoList newList;
+                newList = CargoList.ParseToCargoList(dr);
+                NewListForm fo = new NewListForm(newList);
+                fo.ShowDialog();
+            }
+        }
+        private static void EditEntryItem(object sender, EventArgs e)
+        {
+            if (dataGridViewCargo.SelectedRows.Count == 1)
+            {
+                var rowIndex = dataGridViewCargo.SelectedCells[0].RowIndex;
+                DataRow dr = ((DataRowView)dataGridViewCargo.Rows[rowIndex].DataBoundItem).Row;
+                CargoItem newItem;
+                newItem = CargoItem.ParseToCargoItem(dr);
+                NewCargoForm fo = new NewCargoForm(newItem);
+                fo.ShowDialog();
+                populateTableCargo(dataGridViewCargo);
+            }
         }
         private static void DeleteEntryList(object sender, EventArgs e)
         {
-            if (dataGridViewCargo.SelectedRows.Count == 1)
+            if (dataGridViewList.SelectedRows.Count == 1)
             {
                 var rowIndex = dataGridViewList.SelectedCells[0].RowIndex;
                 string rowData = "";
@@ -287,7 +341,7 @@ namespace Cargo
                 DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Database.DeleteCargoList(rowIndex + 1, dataGridViewList.Rows[rowIndex].Cells[2].Value.ToString());
+                    Database.DeleteCargoList(Int32.Parse(dataGridViewCargo.Rows[rowIndex].Cells[0].Value.ToString()), dataGridViewList.Rows[rowIndex].Cells[2].Value.ToString());
                     populateTableLists(dataGridViewList);
                 }
             }
@@ -296,8 +350,7 @@ namespace Cargo
                 MessageBox.Show("Выберите одну запись для удаления.");
             }
         }
-
-        private static void DeleteEntryCargo(object sender, EventArgs e)
+        private static void DeleteEntryItem(object sender, EventArgs e)
         {
             if (dataGridViewCargo.SelectedRows.Count == 1)
             {
@@ -310,7 +363,7 @@ namespace Cargo
                 DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Database.DeleteCargo(rowIndex + 1, dataGridViewCargo.Rows[rowIndex].Cells[1].Value.ToString());
+                    Database.DeleteCargo(Int32.Parse(dataGridViewCargo.Rows[rowIndex].Cells[0].Value.ToString()), dataGridViewCargo.Rows[rowIndex].Cells[1].Value.ToString());
                     populateTableCargo(dataGridViewCargo);
                 }
             }

@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,13 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddNewEntry.cs">
+    <Compile Include="CargoListForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddNewEntry.Designer.cs">
-      <DependentUpon>AddNewEntry.cs</DependentUpon>
+    <Compile Include="CargoListForm.Designer.cs">
+      <DependentUpon>CargoListForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Classes\Order.cs" />
+    <Compile Include="Classes\OrderClient.cs" />
     <Compile Include="OrderForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +71,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CargoListForm.resx">
+      <DependentUpon>CargoListForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OrderForm.resx">
       <DependentUpon>OrderForm.cs</DependentUpon>
     </EmbeddedResource>

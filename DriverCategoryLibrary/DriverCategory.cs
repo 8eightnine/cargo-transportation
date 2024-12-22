@@ -46,6 +46,7 @@ namespace DriverCategory
             // dataGridView
             // 
             dataGridView1.AllowUserToOrderColumns = true;
+            dataGridView1.AllowUserToAddRows = false;
             dataGridView1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom)
             | AnchorStyles.Left)
             | AnchorStyles.Right)));
@@ -156,10 +157,9 @@ namespace DriverCategory
             string temp = fo.valueToChange;
             if (temp != null)
             {
-                var command = $"INSERT INTO Category_List (ID, Value) VALUES (@Value1, @Value2)";
+                var command = $"INSERT INTO Category_List (Value) VALUES (@Value2)";
                 var parameters = new Dictionary<string, object>
                 {
-                    { "@Value1", dataGridView.Rows.Count },
                     { "@Value2", temp }
                 };
                 Database.WriteData("Databases\\make.db", command, parameters);
@@ -172,13 +172,13 @@ namespace DriverCategory
             {
                 var rowIndex = dataGridView.SelectedCells[0].RowIndex;
                 var rowData = dataGridView.Rows[rowIndex].Cells[1].Value;
-                DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowIndex + 1} - {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {Int32.Parse(dataGridView.Rows[rowIndex].Cells[0].Value.ToString())} - {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
                     var command = $"DELETE FROM Category_List WHERE ID = @Value1 AND Value = @Value2";
                     var parameters = new Dictionary<string, object>
                     {
-                        { "@Value1", rowIndex + 1},
+                        { "@Value1", Int32.Parse(dataGridView.Rows[rowIndex].Cells[0].Value.ToString())},
                         { "@Value2", rowData }
                     };
                     Database.WriteData("Databases\\make.db", command, parameters);

@@ -94,6 +94,7 @@
     <Compile Include="Classes\LibInvoke.cs" />
     <Compile Include="Classes\ProgramMenu.cs" />
     <Compile Include="Classes\User.cs" />
+    <Compile Include="Classes\ValidityChecker.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,12 +103,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TEMP.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TEMP.Designer.cs">
-      <DependentUpon>TEMP.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="AuthForm.resx">
       <DependentUpon>AuthForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -124,9 +119,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="TEMP.resx">
-      <DependentUpon>TEMP.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -46,6 +46,7 @@ namespace CompanyClients
             // dataGridView
             // 
             dataGridView1.AllowUserToOrderColumns = true;
+            dataGridView1.AllowUserToAddRows = false;
             dataGridView1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom)
             | AnchorStyles.Left)
             | AnchorStyles.Right)));
@@ -138,7 +139,7 @@ namespace CompanyClients
             contextMenuStrip1.ResumeLayout(false);
             mainForm.ResumeLayout();
             mainForm.PerformLayout();
-            mainForm.Text = "ИС ООО \"Перевозки и КО\" | Заказы";
+            mainForm.Text = "ИС ООО \"Перевозки и КО\" | Юридические лица";
             #endregion
 
             populateTable(dataGridView);
@@ -163,22 +164,24 @@ namespace CompanyClients
         }
         private static void AddNewEntry(object sender, EventArgs e)
         {
-            //Order order = new Order();
-            //order._isNew = 1;
-            //OrderForm fo = new OrderForm(order);
-            //fo.ShowDialog();
+            CompanyClient compClient = new CompanyClient();
+            compClient._isNew = 1;
+            CompanyClientForm fo = new CompanyClientForm(compClient);
+            fo.ShowDialog();
+            populateTable(dataGridView);
         }
         private static void EditEntry(object sender, EventArgs e)
         {
-            //if (dataGridView.SelectedRows.Count == 1)
-            //{
-            //    var rowIndex = dataGridView.SelectedCells[0].RowIndex;
-            //    DataRow dr = ((DataRowView)dataGridView.Rows[rowIndex].DataBoundItem).Row;
-            //    Order order;
-            //    order = Order.ParseToOrder(dr);
-            //    OrderForm fo = new OrderForm(order);
-            //    fo.ShowDialog();
-            //}
+            if (dataGridView.SelectedRows.Count == 1)
+            {
+                var rowIndex = dataGridView.SelectedCells[0].RowIndex;
+                DataRow dr = ((DataRowView)dataGridView.Rows[rowIndex].DataBoundItem).Row;
+                CompanyClient order;
+                order = CompanyClient.ParseTo(dr);
+                CompanyClientForm fo = new CompanyClientForm(order);
+                fo.ShowDialog();
+                populateTable(dataGridView);
+            }
         }
         private static void DeleteEntry(object sender, EventArgs e)
         {
@@ -193,7 +196,7 @@ namespace CompanyClients
                 DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Database.DeleteCompanyClient(rowIndex + 1, dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
+                    Database.DeleteCompanyClient(Int32.Parse(dataGridView.Rows[rowIndex].Cells[0].Value.ToString()), dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
                     populateTable(dataGridView);
                 }
             }

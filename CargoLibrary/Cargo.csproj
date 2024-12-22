@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,6 +45,19 @@
   <ItemGroup>
     <Compile Include="Cargo.cs" />
     <Compile Include="Classes\CargoItem.cs" />
+    <Compile Include="Classes\CargoList.cs" />
+    <Compile Include="NewCargoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewCargoForm.Designer.cs">
+      <DependentUpon>NewCargoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewListForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewListForm.Designer.cs">
+      <DependentUpon>NewListForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +65,14 @@
       <Project>{37a91009-1b11-4f4d-851b-38ebaad9ec69}</Project>
       <Name>! cargo-transportation</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="NewCargoForm.resx">
+      <DependentUpon>NewCargoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewListForm.resx">
+      <DependentUpon>NewListForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

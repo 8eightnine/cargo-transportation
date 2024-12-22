@@ -5,7 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using cargo_transportation;
 using cargo_transportation.Classes;
-using PhysClients.Classes;
 
 namespace PhysClients
 {
@@ -47,6 +46,7 @@ namespace PhysClients
             // dataGridView
             // 
             dataGridView1.AllowUserToOrderColumns = true;
+            dataGridView1.AllowUserToAddRows = false;
             dataGridView1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom)
             | AnchorStyles.Left)
             | AnchorStyles.Right)));
@@ -139,7 +139,7 @@ namespace PhysClients
             contextMenuStrip1.ResumeLayout(false);
             mainForm.ResumeLayout();
             mainForm.PerformLayout();
-            mainForm.Text = "ИС ООО \"Перевозки и КО\" | Заказы";
+            mainForm.Text = "ИС ООО \"Перевозки и КО\" | Физические лица";
             #endregion
 
             populateTable(dataGridView);
@@ -164,22 +164,24 @@ namespace PhysClients
         }
         private static void AddNewEntry(object sender, EventArgs e)
         {
-            //Order order = new Order();
-            //order._isNew = 1;
-            //OrderForm fo = new OrderForm(order);
-            //fo.ShowDialog();
+            PhysClient physClient = new PhysClient();
+            physClient._isNew = 1;
+            PhysClientForm fo = new PhysClientForm(physClient);
+            fo.ShowDialog();
+            populateTable(dataGridView);
         }
         private static void EditEntry(object sender, EventArgs e)
         {
-            //if (dataGridView.SelectedRows.Count == 1)
-            //{
-            //    var rowIndex = dataGridView.SelectedCells[0].RowIndex;
-            //    DataRow dr = ((DataRowView)dataGridView.Rows[rowIndex].DataBoundItem).Row;
-            //    Order order;
-            //    order = Order.ParseToOrder(dr);
-            //    OrderForm fo = new OrderForm(order);
-            //    fo.ShowDialog();
-            //}
+            if (dataGridView.SelectedRows.Count == 1)
+            {
+                var rowIndex = dataGridView.SelectedCells[0].RowIndex;
+                DataRow dr = ((DataRowView)dataGridView.Rows[rowIndex].DataBoundItem).Row;
+                PhysClient physClient;
+                physClient = PhysClient.ParseTo(dr);
+                PhysClientForm fo = new PhysClientForm(physClient);
+                fo.ShowDialog();
+            }
+            populateTable(dataGridView);
         }
         private static void DeleteEntry(object sender, EventArgs e)
         {
@@ -194,7 +196,7 @@ namespace PhysClients
                 DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Database.DeletePhysClient(rowIndex + 1, dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
+                    Database.DeletePhysClient(Int32.Parse(dataGridView.Rows[rowIndex].Cells[0].Value.ToString()), dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
                     populateTable(dataGridView);
                 }
             }

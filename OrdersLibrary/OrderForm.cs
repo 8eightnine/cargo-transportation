@@ -5,43 +5,24 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Cargo;
 using cargo_transportation.Classes;
-using Cargo.Classes;
 
 namespace Orders
 {
     public partial class OrderForm : Form
     {
-        // Working variables
-        Order currentOrder;
-        public static CargoItem[] fullCargoList;
 
-        static CargoItem[] GetCargoValues()
-        {
-            DataTable cargoData = new DataTable();
-            string command = $"SELECT * FROM Cargo";
-            Database.ReadData("Databases\\make.db", command, cargoData);
-            CargoItem[] temp = new CargoItem[cargoData.Rows.Count];
-            for (int i = 0; i < cargoData.Rows.Count; i++)
-            {
-                temp[i] = new CargoItem();
-                temp[i].ID = Int32.Parse(cargoData.Rows[i].ItemArray[0].ToString());
-                temp[i].Name = cargoData.Rows[i].ItemArray[1].ToString();
-                temp[i].Unit = cargoData.Rows[i].ItemArray[2].ToString();
-                temp[i].Weight = Int32.Parse(cargoData.Rows[i].ItemArray[3].ToString());
-            }
-            cargoData.Dispose();
-            return temp;
-        }
+        Order currentOrder;
+        OrderClient client = new OrderClient();
+        private static int client_is_new = 0;
 
         public OrderForm(Order order)
         {
             InitializeComponent();
             currentOrder = order;
-            fullCargoList = GetCargoValues();
             FillForm(order);
         }
 
@@ -54,139 +35,245 @@ namespace Orders
                 dateTimePicker1.Value = order.OrderDate;
                 senderNameBox.Text = order.SenderName;
                 senderAddressBox.Text = order.SenderAddress;
-                clientIDBox.Text = order.ClientID.ToString();
                 deliveryAddressBox.Text = order.ClientAddress;
-                tripCostBox.Text = order.Cost.ToString();
+                costBox.Text = order.Cost.ToString();
                 tripLengthBox.Text = order.TripLength.ToString();
-                tripIDBox.Text = order.TripID.ToString();
                 #endregion
-                FillCargoList();
+
             }
+            FillClientAndTrip();
+            FillPhysAndCompanyBoxes();
         }
 
-        private void SaveEntry(object sender, EventArgs e)
+        private void FillClientAndTrip()
+        {
+            DataTable dt = new DataTable();
+            Database.ReadData("Databases\\make.db", $"SELECT * FROM 'Trip'", dt);
+            foreach (DataRow dr in dt.Rows)
+            {
+                tripIDComboBox.Items.Add(new ComboBoxItem
+                {
+                    Id = Convert.ToInt32(dr[0].ToString()),
+                    DisplayText = dr[0].ToString() + " - " + dr[2].ToString()
+                });
+            }
+            dt.Dispose();
+            if (currentOrder._isNew != 1)
+                tripIDComboBox.SelectedIndex = currentOrder.TripID - 1;
+
+            DataTable dt1 = new DataTable();
+            Database.ReadData("Databases\\make.db", $"SELECT * FROM 'Client'", dt1);
+            foreach (DataRow dr in dt1.Rows)
+            {
+                clientIDComboBox.Items.Add(new ComboBoxItem
+                {
+                    Id = Convert.ToInt32(dr[0].ToString()),
+                    DisplayText = dr[1].ToString()
+                });
+            }
+            dt1.Dispose();
+            if (currentOrder._isNew != 1)
+                clientIDComboBox.SelectedIndex = currentOrder.ClientID - 1;
+        }
+
+        private void showCargoList_Click(object sender, EventArgs e)
+        {
+            CargoListForm cargoListForm = new CargoListForm(currentOrder.ID);
+            cargoListForm.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SaveEntry();
+        }
+
+        private void SaveEntry()
         {
             try
             {
                 if (CheckValidity() == 1)
                 {
-                    if (currentOrder._isNew == 0)
+                    if (client_is_new == 1)
                     {
-                        string command = $"UPDATE 'Order' SET " +
+                        client._phoneNumber = phoneNumberBox.Text;
+                        client._fullName = clientNameBox.Text;
+                        CreateNewClient();
+                    }
+
+                    string command = "";
+                    if (currentOrder._isNew != 1)
+                    {
+                        command = $"UPDATE 'Order' SET " +
                             $"Date = '{dateTimePicker1.Value.ToString("dd.MM.yyyy")}', " +
                             $"Sender = '{senderNameBox.Text}', " +
                             $"SenderAddress = '{senderAddressBox.Text}', " +
-                            $"Client = {Int32.Parse(clientIDBox.Text)}, " +
+                            $"Client = {client._id}, " +
                             $"RecipientAddress = '{deliveryAddressBox.Text}', " +
                             $"TripLength = {Int32.Parse(tripLengthBox.Text)}, " +
-                            $"Cost = {Int32.Parse(tripCostBox.Text)}, " +
-                            $"Trip = {Int32.Parse(tripIDBox.Text)} " +
+                            $"Cost = {Int32.Parse(costBox.Text)}, " +
+                            $"Trip = {currentOrder.TripID} " +
                             $"WHERE ID = {currentOrder.ID}";
                         Database.WriteData("Databases\\make.db", command, null);
                         MessageBox.Show("Запись сохранена");
                     }
                     else
-                        CreateNewOrder();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ошибка:" + ex.Message);
-            }
-        }
-
-        private void CreateNewOrder()
-        {
-            string command = $"INSERT INTO 'Order' (Date, Sender, SenderAddress, Client, RecipientAddress, TripLength, Cost, Trip) VALUES" +
+                    {
+                        command = $"INSERT INTO 'Order' (Date, Sender, SenderAddress, Client, RecipientAddress, TripLength, Cost, Trip) VALUES" +
                             $"('{dateTimePicker1.Value.ToString("dd.MM.yyyy")}', " +
                             $"'{senderNameBox.Text}', " +
                             $"'{senderAddressBox.Text}', " +
-                            $"{Int32.Parse(clientIDBox.Text)}, " +
+                            $"{client._id}, " +
                             $"'{deliveryAddressBox.Text}', " +
                             $"{Int32.Parse(tripLengthBox.Text)}, " +
-                            $"{Int32.Parse(tripCostBox.Text)}, " +
-                            $"{Int32.Parse(tripIDBox.Text)})";
-            Database.WriteData("Databases\\make.db", command, null);
-            MessageBox.Show("Запись сохранена");
-        }
-
-        private void FillCargoList()
-        {
-            DataTable cargoList = new DataTable();
-            string command = $"SELECT CAST(CargoID as varchar(10)) as CargoID, Quantity, InsuranceCost FROM Cargo_List WHERE OrderID = {currentOrder.ID}";
-            Database.ReadData("Databases\\make.db", command, cargoList);
-            CargoListGridView.DataSource = cargoList;
-            CargoListGridView.Columns[0].HeaderText = "Название товара";
-            CargoListGridView.Columns[1].HeaderText = "Количество";
-            CargoListGridView.Columns[2].HeaderText = "Стоимость";
-
-            CargoListGridView.Refresh();
-
-            foreach (DataGridViewRow dr in CargoListGridView.Rows)
-            {
-                dr.Cells[0].Value = fullCargoList.Where(item => item.ID == Int32.Parse(dr.Cells[0].Value.ToString())).FirstOrDefault().Name;
-            }
-        }
-
-
-        private int CheckValidity()
-        {
-            if (senderNameBox.Text.Length == 0)
-                throw new Exception("Поле 'ФИО отправителя' не может быть пустым");
-
-            if (senderAddressBox.Text.Length == 0)
-                throw new Exception("Поле 'Адрес отправителя' не может быть пустым");
-
-            if (deliveryAddressBox.Text.Length == 0)
-                throw new Exception("Поле 'Адрес доставки' не может быть пустым");
-
-            if (clientIDBox.Text.Length != 0)
-            {
-                int temp;
-                if (Int32.TryParse(clientIDBox.Text, out temp) == false)
-                    throw new Exception("Поле 'ID клиента-получателя' содержит неккоректное значение");
-            }
-            else throw new Exception("Поле 'ID клиента-получателя' не может быть пустым");
-
-            if (tripCostBox.Text.Length != 0)
-            {
-                int temp;
-                if (Int32.TryParse(tripCostBox.Text, out temp) == false)
-                    throw new Exception("Поле 'Стоимость заказа' содержит неккоректное значение");
-                
-            }
-            else throw new Exception("Поле 'Стоимость заказа' не может быть пустым");
-
-            if (tripLengthBox.Text.Length != 0)
-            {
-                int temp;
-                if (Int32.TryParse(tripLengthBox.Text, out temp) == false)
-                    throw new Exception("Поле 'Длина поездки' содержит неккоректное значение");
-
-            }
-            else throw new Exception("Поле 'Длина поездки' не может быть пустым");
-
-            if (tripIDBox.Text.Length != 0)
-            {
-                int temp;
-                if (Int32.TryParse(tripIDBox.Text, out temp) == false)
-                    throw new Exception("Поле 'ID поездки' содержит неккоректное значение");
-                if (temp != currentOrder.TripID)
-                {
-                    DataTable dt = new DataTable();
-                    string command = $"SELECT CASE WHEN NOT EXISTS (SELECT 1 FROM Trip WHERE ID = {temp}) THEN -1 WHEN EXISTS (SELECT 1 FROM \"Order\" WHERE Trip = {temp}) THEN 0 ELSE 1 END AS Result;";
-                    int result = Database.ReadSingleInt("Databases\\make.db", command);
-                    switch (result)
-                    {
-                        case -1: { throw new Exception("Поездки с таким ID не существует"); break; }
-                        case 0: { throw new Exception("Поездка с таким ID уже используется для другого заказа"); break; }
-                        default: { break; }
+                            $"{Int32.Parse(costBox.Text)}, " +
+                            $"{currentOrder.TripID})";
+                        Database.WriteData("Databases\\make.db", command);
+                        MessageBox.Show("Запись сохранена");
                     }
                 }
             }
-            else throw new Exception("Поле 'ID поездки' не может быть пустым");
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        private int CheckValidity()
+        {
+            ValidityChecker.CheckIfStringValid(senderNameBox.Text, "ФИО отправителя");
+            ValidityChecker.CheckIfStringValid(senderAddressBox.Text, "Адрес отправителя");
+            ValidityChecker.CheckIfStringValid(deliveryAddressBox.Text, "Адрес доставки");
+            ValidityChecker.CheckIfIntValid(tripLengthBox.Text, "Длина поездки");
+            ValidityChecker.CheckIfIntValid(costBox.Text, "Стоимость заказа");
+
+            if (tripIDComboBox.SelectedIndex != -1)
+            {
+                DataTable dt = new DataTable();
+                string command = $"SELECT CASE WHEN NOT EXISTS (SELECT 1 FROM Trip WHERE ID = {currentOrder.TripID}) THEN -1 WHEN EXISTS (SELECT 1 FROM \"Order\" WHERE Trip = {currentOrder.TripID}) THEN 0 ELSE 1 END AS Result;";
+                int result = Database.ReadSingleInt("Databases\\make.db", command);
+                switch (result)
+                {
+                    case 0: { throw new Exception("Поездка с таким ID уже используется для другого заказа"); }
+                    default: { break; }
+                }
+            }
+            else throw new Exception("Поле 'Поездка' не может быть пустым");
+
+            ValidityChecker.CheckIfStringValid(clientNameBox.Text, "ФИО клиента");
+            ValidityChecker.CheckPhone(phoneNumberBox.Text, "Номер телефона клиента");
 
             return 1;
         }
-    } 
+
+        private void CreateNewClient()
+        {
+            string command = $"INSERT INTO 'Client' (FullName, PhoneNumber, PhysPersonID, CompanyID) VALUES " +
+                $"(@Value1, " +
+                $"@Value2, " +
+                $"@Value3, " +
+                $"@Value4);";
+                
+            var parameters = new Dictionary<string, object>
+            {
+                { "@Value1", $"{clientNameBox.Text}"},
+                { "@Value2", $"{phoneNumberBox.Text}"},
+                { "@Value3", null},
+                { "@Value4", null}
+            };
+            if (client._physPersonID != 0)
+                parameters["@Value3"] = $"{client._physPersonID}";
+            if (client._companyPersonID != 0)
+                parameters["@Value4"] = $"{client._companyPersonID}";
+
+            Database.WriteData("Databases\\make.db", command, parameters);
+        }
+
+        private void tripIDComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tripIDComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                currentOrder.TripID = selectedItem.Id;
+            }
+        }
+
+        private void clientIDComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (clientIDComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                currentOrder.ClientID = selectedItem.Id;
+                DataTable dt = new DataTable();
+                Database.ReadData("Databases\\make.db", $"SELECT * FROM 'Client' WHERE ID = {currentOrder.ClientID}", dt);
+                FillClientInfo(dt.Rows[0]);
+                dt.Dispose();
+            }
+        }
+
+        private void FillClientInfo(DataRow dr)
+        {
+            client = OrderClient.ParseToClient(dr);
+            clientNameBox.Text = client._fullName;
+            phoneNumberBox.Text = client._phoneNumber;
+            FillPhysAndCompanyBoxes();
+        }
+
+        private void FillPhysAndCompanyBoxes()
+        {
+            DataTable dt = new DataTable();
+            Database.ReadData("Databases\\make.db", $"SELECT * FROM 'Phys_Person'", dt);
+            foreach (DataRow dr in dt.Rows)
+            {
+                physPersonComboBox.Items.Add(new ComboBoxItem
+                {
+                    Id = Convert.ToInt32(dr[0].ToString()),
+                    DisplayText = dr[1].ToString()
+                });
+            }
+            dt.Dispose();
+            if ((currentOrder._isNew == 1 && currentOrder.ClientID > 0) || currentOrder._isNew != 1)
+                physPersonComboBox.SelectedIndex = client._physPersonID - 1;
+
+            DataTable dt1 = new DataTable();
+            Database.ReadData("Databases\\make.db", $"SELECT * FROM 'Client'", dt1);
+            foreach (DataRow dr in dt1.Rows)
+            {
+                companyPersonComboBox.Items.Add(new ComboBoxItem
+                {
+                    Id = Convert.ToInt32(dr[0].ToString()),
+                    DisplayText = dr[1].ToString()
+                });
+            }
+            dt1.Dispose();
+            if ((currentOrder._isNew == 1 && currentOrder.ClientID > 0) || currentOrder._isNew != 1)
+                companyPersonComboBox.SelectedIndex = client._companyPersonID - 1;
+        }
+
+        private void physPersonComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (physPersonComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                client._physPersonID = selectedItem.Id;
+            }
+        }
+
+        private void companyPersonComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (companyPersonComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                client._companyPersonID = selectedItem.Id;
+            }
+        }
+
+        private void createNewCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (createNewCheckBox.Checked)
+            {
+                clientIDComboBox.Visible = false;
+                label11.Visible = false;
+                client_is_new = 1;
+            }
+            else
+            {
+                clientIDComboBox.Visible = true;
+                label11.Visible = true;
+                client_is_new = 0;
+            }
+        }
+    }
 }

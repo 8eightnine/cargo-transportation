@@ -5,7 +5,6 @@ using System.Text;
 using System.Windows.Forms;
 using cargo_transportation;
 using cargo_transportation.Classes;
-using Trips.Classes;
 
 namespace Trips
 {
@@ -13,22 +12,20 @@ namespace Trips
     {
         // Controls
         private static DataGridView dataGridView;
-        private static Button addNewButton;
         private static TextBox textBox;
 
         // Working varaibles
         private static DataTable dataTable = new DataTable();
-        internal static object databaseObject;
         internal static User currentUser;
         internal static MainForm _mainForm;
         internal static string moduleName;
-        internal Trip trip;
 
         public static void ShowTrips(MainForm mainForm)
         {
             #region Designer
             currentUser = mainForm.currentUser;
             moduleName = mainForm.Tag.ToString();
+            _mainForm = mainForm;
             var components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
             var dataGridView1 = new DataGridView();
@@ -47,6 +44,7 @@ namespace Trips
             // dataGridView
             // 
             dataGridView1.AllowUserToOrderColumns = true;
+            dataGridView1.AllowUserToAddRows = false;
             dataGridView1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom)
             | AnchorStyles.Left)
             | AnchorStyles.Right)));
@@ -130,7 +128,6 @@ namespace Trips
             }
             mainForm.Controls.Add(menuStrip1);
             mainForm.Controls.Add(textBox1);
-            mainForm.Controls.Add(addNewButton);
             mainForm.Controls.Add(dataGridView1);
             mainForm.MinimumSize = new System.Drawing.Size(818, 494);
             mainForm.Name = "MainForm";
@@ -139,7 +136,7 @@ namespace Trips
             contextMenuStrip1.ResumeLayout(false);
             mainForm.ResumeLayout();
             mainForm.PerformLayout();
-            mainForm.Text = "ИС ООО \"Перевозки и КО\" | Заказы";
+            mainForm.Text = "ИС ООО \"Перевозки и КО\" | Рейсы";
             #endregion
 
             populateTable(dataGridView);
@@ -164,22 +161,24 @@ namespace Trips
         }
         private static void AddNewEntry(object sender, EventArgs e)
         {
-            //Order order = new Order();
-            //order._isNew = 1;
-            //OrderForm fo = new OrderForm(order);
-            //fo.ShowDialog();
+            Trip trip = new Trip();
+            trip._isNew = 1;
+            TripForm fo = new TripForm(trip);
+            fo.ShowDialog();
+            populateTable(dataGridView);
         }
         private static void EditEntry(object sender, EventArgs e)
         {
-            //if (dataGridView.SelectedRows.Count == 1)
-            //{
-            //    var rowIndex = dataGridView.SelectedCells[0].RowIndex;
-            //    DataRow dr = ((DataRowView)dataGridView.Rows[rowIndex].DataBoundItem).Row;
-            //    Order order;
-            //    order = Order.ParseToOrder(dr);
-            //    OrderForm fo = new OrderForm(order);
-            //    fo.ShowDialog();
-            //}
+            if (dataGridView.SelectedRows.Count == 1)
+            {
+                var rowIndex = dataGridView.SelectedCells[0].RowIndex;
+                DataRow dr = ((DataRowView)dataGridView.Rows[rowIndex].DataBoundItem).Row;
+                Trip trip;
+                trip = Trip.ParseToTrip(dr);
+                TripForm fo = new TripForm(trip);
+                fo.ShowDialog();
+            }
+            populateTable(dataGridView);
         }
         private static void DeleteEntry(object sender, EventArgs e)
         {
@@ -194,7 +193,7 @@ namespace Trips
                 DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Database.DeleteTrip(rowIndex + 1, dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
+                    Database.DeleteTrip(Int32.Parse(dataGridView.Rows[rowIndex].Cells[0].Value.ToString()), dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
                     populateTable(dataGridView);
                 }
             }

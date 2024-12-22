@@ -12,21 +12,19 @@ namespace Orders
     {
         // Controls
         private static DataGridView dataGridView;
-        private static Button addNewButton;
         private static TextBox textBox;
 
         // Working varaibles
         private static DataTable dataTable = new DataTable();
-        internal static object databaseObject;
         internal static User currentUser;
         internal static MainForm _mainForm;
         internal static string moduleName;
-        internal Order order;
 
         public static void ShowOrders(MainForm mainForm)
         {
             #region Designer
             currentUser = mainForm.currentUser;
+            _mainForm = mainForm;
             moduleName = mainForm.Tag.ToString();
             var components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
@@ -46,6 +44,7 @@ namespace Orders
             // dataGridView
             // 
             dataGridView1.AllowUserToOrderColumns = true;
+            dataGridView1.AllowUserToAddRows = false;
             dataGridView1.Anchor = ((AnchorStyles)((((AnchorStyles.Top | AnchorStyles.Bottom)
             | AnchorStyles.Left)
             | AnchorStyles.Right)));
@@ -129,7 +128,6 @@ namespace Orders
             }
             mainForm.Controls.Add(menuStrip1);
             mainForm.Controls.Add(textBox1);
-            mainForm.Controls.Add(addNewButton);
             mainForm.Controls.Add(dataGridView1);
             mainForm.MinimumSize = new System.Drawing.Size(818, 494);
             mainForm.Name = "MainForm";
@@ -167,6 +165,7 @@ namespace Orders
             order._isNew = 1;
             OrderForm fo = new OrderForm(order);
             fo.ShowDialog();
+            populateTable(dataGridView);
         }
         private static void EditEntry(object sender, EventArgs e)
         {
@@ -178,6 +177,7 @@ namespace Orders
                 order = Order.ParseToOrder(dr);
                 OrderForm fo = new OrderForm(order);
                 fo.ShowDialog();
+                populateTable(dataGridView);
             }
         }
         private static void DeleteEntry(object sender, EventArgs e)
@@ -193,7 +193,7 @@ namespace Orders
                 DialogResult dialogResult = MessageBox.Show($"Вы хотите удалить следующую строку:\n {rowData}", "Подтвердите удаление", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    Database.DeleteOrder(rowIndex + 1, dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
+                    Database.DeleteOrder(Int32.Parse(dataGridView.Rows[rowIndex].Cells[0].Value.ToString()), dataGridView.Rows[rowIndex].Cells[2].Value.ToString());
                     populateTable(dataGridView);
                 }
             }
