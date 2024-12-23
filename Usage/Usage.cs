@@ -45,6 +45,29 @@ namespace Usage
             contextMenuStrip1.SuspendLayout();
             mainForm.SuspendLayout();
             mainForm.Controls.Clear();
+            var label1 = new Label();
+            var label2 = new Label();
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(12, 439);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(42, 13);
+            label1.TabIndex = 6;
+            label1.Text = "Поиск:";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(440, 426);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(352, 26);
+            label2.TabIndex = 7;
+            label2.Text = "Для работы с данными выберите одну строку левой кнопкой мыши\r\nи нажмите на нее пр" +
+            "авой кнопкой мыши";
+            mainForm.Controls.Add(label1);
+            mainForm.Controls.Add(label2);
             // 
             // dataGridView
             // 
@@ -101,7 +124,7 @@ namespace Usage
             // textBox
             // 
             textBox1.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Left)));
-            textBox1.Location = new System.Drawing.Point(12, 426);
+            textBox1.Location = new System.Drawing.Point(60, 426);
             textBox1.Margin = new Padding(2);
             textBox1.Name = "textBox";
             textBox1.Size = new System.Drawing.Size(268, 20);

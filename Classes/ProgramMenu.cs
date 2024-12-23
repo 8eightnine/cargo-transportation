@@ -105,7 +105,7 @@ namespace cargo_transportation.Classes
         public static int RegisterNewUser(User user, string username, string password)
         {
             string cmd = $"INSERT INTO Users (Username, Password) VALUES ('{username}', '{password}')";
-            Database.WriteData("Databases\\users.db", cmd, null);
+            Database.WriteData("Databases\\users.db", cmd);
             DataTable users = new DataTable();
             Database.ReadData("Databases\\users.db", $"SELECT * FROM Users WHERE Username = '{username}'", users);
             DataRow userRow = users.Rows[0];
@@ -119,12 +119,19 @@ namespace cargo_transportation.Classes
                 string temp;
                 DataRow moduleRow = dt.Rows[i];
                 if (moduleRow.ItemArray[3].ToString() == "Management")
+                {
                     temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {0}, {0}, {0}, {0})";
+                    user.rights[i].name = moduleRow.ItemArray[3].ToString();
+                    user.rights[i].read = 0;
+                    user.rights[i].write = user.rights[i].edit = user.rights[i].delete = 0;
+                    Database.WriteData("Databases\\users.db", temp);
+                    continue;
+                }
                 else
                     temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {1}, {0}, {0}, {0})";
                 try
                 {
-                    Database.WriteData("Databases\\users.db", temp, null);
+                    Database.WriteData("Databases\\users.db", temp);
                     user.rights[i].name = moduleRow.ItemArray[3].ToString();
                     user.rights[i].read = 1;
                     user.rights[i].write = user.rights[i].edit = user.rights[i].delete = 0;

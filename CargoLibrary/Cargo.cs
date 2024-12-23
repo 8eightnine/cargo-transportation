@@ -13,16 +13,13 @@ namespace Cargo
         // Controls
         private static DataGridView dataGridViewCargo;
         private static DataGridView dataGridViewList;
-        private static Button addNewButton;
         private static TextBox textBoxCargo;
         private static TextBox textBoxList;
 
         // Working varaibles
         private static DataTable dataTable1 = new DataTable();
         private static DataTable dataTable2 = new DataTable();
-        internal static object databaseObject;
         internal static User currentUser;
-        internal static MainForm _mainForm;
         internal static string moduleName;
         //internal PhysClient client;
 
@@ -234,7 +231,6 @@ namespace Cargo
             mainForm.Controls.Add(label2);
             mainForm.Controls.Add(textBox1);
             mainForm.Controls.Add(textBox2);
-            mainForm.Controls.Add(addNewButton);
             mainForm.Controls.Add(dataGridView1);
             mainForm.Controls.Add(dataGridView2);
             mainForm.MinimumSize = new System.Drawing.Size(818, 494);

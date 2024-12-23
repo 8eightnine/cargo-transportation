@@ -1,9 +1,9 @@
-﻿using About.Properties;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using About.Properties;
 using cargo_transportation;
 
 namespace About
@@ -11,18 +11,14 @@ namespace About
     public class About
     {
         private static RichTextBox mainTextBox;
-        private static RichTextBox infoTextBox;
-        private static Button aboutButton;
-        private static Button developerButton;
         private static PictureBox pictureBox;
         private static WebBrowser webBrowser;
-        private static MainForm _mainForm;
 
 
         // Функция для отрисовки элементов управления
         public static void ShowAbout(MainForm mainForm)
         {
-                _mainForm = mainForm;
+            #region desginer
                 var richTextBox1 = new RichTextBox();
                 var button1 = new Button();
                 var button2 = new Button();
@@ -55,7 +51,6 @@ namespace About
                 button1.Text = "О программе";
                 button1.UseVisualStyleBackColor = true;
                 button1.Anchor = ((AnchorStyles.Top | AnchorStyles.Left));
-                aboutButton = button1;
                 // 
                 // button2
                 // 
@@ -64,10 +59,9 @@ namespace About
                 button2.Size = new Size(85, 23);
                 button2.Click += Button2_Click;
                 button2.TabIndex = 2;
-                button2.Text = "Разработчик";
+                button2.Text = "Руководство пользователя";
                 button2.UseVisualStyleBackColor = true;
                 button2.Anchor = ((AnchorStyles.Top | AnchorStyles.Left));
-                developerButton = button2;
                 // 
                 // pictureBox1
                 // 
@@ -107,23 +101,19 @@ namespace About
                 {
                     menuStrip1.Items.Add(result[i]);
                 }
-                //
-                // Adding controls to the form
-                //
-                mainForm.Controls.Add(menuStrip1);
-                mainForm.Controls.Add(richTextBox1);
-                mainForm.Controls.Add(button1);
-                mainForm.Controls.Add(button2);
-                mainForm.Controls.Add(webBrowser);
-                mainForm.Controls.Add(pictureBox1);
-                mainForm.ResumeLayout();
-                mainForm.PerformLayout();
-                mainForm.Text = "ИС ООО \"Перевозки и КО\" | Справка";
-        }
-
-        public static void ShowManagement(MainForm mainForm)
-        {
-            MessageBox.Show("TEST");
+            #endregion
+            
+            #region Adding controls to the form
+            mainForm.Controls.Add(menuStrip1);
+            mainForm.Controls.Add(richTextBox1);
+            mainForm.Controls.Add(button1);
+            mainForm.Controls.Add(button2);
+            mainForm.Controls.Add(webBrowser);
+            mainForm.Controls.Add(pictureBox1);
+            mainForm.ResumeLayout();
+            mainForm.PerformLayout();
+            mainForm.Text = "ИС ООО \"Перевозки и КО\" | Справка";
+            #endregion
         }
 
         public static void ChangePassword(MainForm mainForm)

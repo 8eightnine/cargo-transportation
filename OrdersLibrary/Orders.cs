@@ -34,12 +34,36 @@ namespace Orders
             var AddToolStripMenuItem = new ToolStripMenuItem();
             var DeleteToolStripMenuItem = new ToolStripMenuItem();
             var EditToolStripMenuItem = new ToolStripMenuItem();
+            var ExportToolStripMenuItem = new ToolStripMenuItem();
             var addNewEntryButton = new Button();
             var textBox1 = new TextBox();
             ((System.ComponentModel.ISupportInitialize)(dataGridView1)).BeginInit();
             contextMenuStrip1.SuspendLayout();
             mainForm.SuspendLayout();
             mainForm.Controls.Clear();
+            var label1 = new Label();
+            var label2 = new Label();
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(12, 439);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(42, 13);
+            label1.TabIndex = 6;
+            label1.Text = "Поиск:";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(440, 426);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(352, 26);
+            label2.TabIndex = 7;
+            label2.Text = "Для работы с данными выберите одну строку левой кнопкой мыши\r\nи нажмите на нее пр" +
+            "авой кнопкой мыши";
+            mainForm.Controls.Add(label1);
+            mainForm.Controls.Add(label2);
             // 
             // dataGridView
             // 
@@ -67,7 +91,8 @@ namespace Orders
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] {
             AddToolStripMenuItem,
             DeleteToolStripMenuItem,
-            EditToolStripMenuItem});
+            EditToolStripMenuItem,
+            ExportToolStripMenuItem});
             contextMenuStrip1.Name = "contextMenuStrip";
             contextMenuStrip1.Size = new System.Drawing.Size(122, 48);
             // 
@@ -104,10 +129,21 @@ namespace Orders
                 EditToolStripMenuItem.Enabled = false;
             }
             // 
+            // ExportToolStripMenuItem
+            // 
+            ExportToolStripMenuItem.Name = "EditToolStripMenuItem";
+            ExportToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+            ExportToolStripMenuItem.Text = "Экспорт";
+            ExportToolStripMenuItem.Click += new EventHandler(ExportRows);
+            if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().edit.Equals(0))
+            {
+                ExportToolStripMenuItem.Enabled = false;
+            }
+            // 
             // textBox
             // 
             textBox1.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Left)));
-            textBox1.Location = new System.Drawing.Point(12, 426);
+            textBox1.Location = new System.Drawing.Point(60, 426);
             textBox1.Margin = new Padding(2);
             textBox1.Name = "textBox";
             textBox1.Size = new System.Drawing.Size(268, 20);
@@ -141,6 +177,7 @@ namespace Orders
 
             populateTable(dataGridView);
         }
+
         private static void TextBox1_TextChanged(object sender, EventArgs e)
         {
             StringBuilder sb = new StringBuilder();
@@ -180,6 +217,52 @@ namespace Orders
                 populateTable(dataGridView);
             }
         }
+
+        private static void ExportRows(object sender, EventArgs e)
+        {
+            int variant = -1;
+            using (ExportForm form = new ExportForm(variant))
+            {
+                form.ShowDialog();
+                variant = form.variant;
+                if (variant != -1)
+                {
+                    DataTable full = new DataTable();
+                    if (dataGridView.SelectedCells.Count > 0)
+                    {
+                        for (int i = 0; i < dataGridView.SelectedRows.Count; i++)
+                        {
+                            var row = dataGridView.Rows[i];
+                            var query = $@"
+                SELECT 
+                    o.ID AS OrderID, 
+                    o.Date, 
+                    o.Sender, 
+                    o.SenderAddress, 
+                    o.RecipientAddress, 
+                    o.TripLength, 
+                    o.Cost, 
+                    t.Car, 
+                    d.FullName AS DriverName, 
+                    d.TableNumber, 
+                    d.DateOfBirth, 
+                    d.Experience 
+                FROM 'Order' o
+                INNER JOIN Trip t ON o.Trip = t.ID
+                INNER JOIN Trip_List tl ON tl.ID = t.ID
+                INNER JOIN Driver d ON d.ID = tl.DriverID
+                WHERE o.ID = {Int32.Parse(row.Cells[0].Value.ToString())}";
+
+                            Database.ReadData("Databases\\make.db", query, full);
+                        }
+                    }
+                    if (variant == 1)
+                        DataProcessor.ExportOrdersToWord(full);
+                    else DataProcessor.ExportOrdersToExcel(full);
+                }
+            }
+        }
+
         private static void DeleteEntry(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count == 1)
