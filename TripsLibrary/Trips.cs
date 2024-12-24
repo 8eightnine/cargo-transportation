@@ -33,7 +33,6 @@ namespace Trips
             var contextMenuStrip1 = new ContextMenuStrip(components);
             var AddToolStripMenuItem = new ToolStripMenuItem();
             var DeleteToolStripMenuItem = new ToolStripMenuItem();
-            var ExportToolStripMenuItem = new ToolStripMenuItem();
             var EditToolStripMenuItem = new ToolStripMenuItem();
             var addNewEntryButton = new Button();
             var textBox1 = new TextBox();
@@ -91,8 +90,7 @@ namespace Trips
             contextMenuStrip1.Items.AddRange(new ToolStripItem[] {
             AddToolStripMenuItem,
             DeleteToolStripMenuItem,
-            EditToolStripMenuItem,
-            ExportToolStripMenuItem});
+            EditToolStripMenuItem});
             contextMenuStrip1.Name = "contextMenuStrip";
             contextMenuStrip1.Size = new System.Drawing.Size(122, 48);
             // 
@@ -127,17 +125,6 @@ namespace Trips
             if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().edit.Equals(0))
             {
                 EditToolStripMenuItem.Enabled = false;
-            }
-            // 
-            // ExportToolStripMenuItem
-            // 
-            ExportToolStripMenuItem.Name = "EditToolStripMenuItem";
-            ExportToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
-            ExportToolStripMenuItem.Text = "Экспорт";
-            ExportToolStripMenuItem.Click += new EventHandler(ExportRows);
-            if (currentUser.rights.Where(r => r.name == moduleName).FirstOrDefault().edit.Equals(0))
-            {
-                ExportToolStripMenuItem.Enabled = false;
             }
             // 
             // textBox
@@ -217,52 +204,6 @@ namespace Trips
             populateTable(dataGridView);
         }
 
-        private static void ExportRows(object sender, EventArgs e)
-        {
-            int variant = -1;
-            using (ExportForm form = new ExportForm(variant))
-            {
-                form.ShowDialog();
-                variant = form.variant;
-                if (variant != -1)
-                {
-                    DataTable full = new DataTable();
-                    if (dataGridView.SelectedCells.Count > 0)
-                    {
-                        for (int i = 0; i < dataGridView.SelectedRows.Count; i++)
-                        {
-                            var row = dataGridView.Rows[i];
-                            var query = $@"
-                                SELECT 
-                                    Trip.ID AS TripID,
-                                    Car_List.StateNumber AS CarStateNumber,
-                                    Car_List.Model AS CarModel,
-                                    Car_Brand.Name AS CarBrandName,
-                                    Car_List.WeightLimit AS CarWeightLimit,
-                                    Car_List.Usage AS CarUsage,
-                                    Car_List.IssueDate AS CarIssueDate,
-                                    Car_List.RepairDate AS CarRepairDate,
-                                    Car_List.Mileage AS CarMileage,
-                                    Car_List.Photo AS CarPhoto,
-                                    Trip.ArrivalDate AS TripArrivalDate
-                                FROM 
-                                    Trip
-                                JOIN 
-                                    Car_List ON Trip.Car = Car_List.ID
-                                JOIN 
-                                    Car_Brand ON Car_List.BrandID = Car_Brand.ID;
-                                WHERE 
-                                    Trip.ID = {Int32.Parse(row.Cells[0].Value.ToString())};";
-
-                            Database.ReadData("Databases\\make.db", query, full);
-                        }
-                    }
-                    if (variant == 1)
-                        DataProcessor.ExportTripsToWord(full);
-                    else DataProcessor.ExportTripsToExcel(full);
-                }
-            }
-        }
         private static void DeleteEntry(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count == 1)

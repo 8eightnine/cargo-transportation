@@ -118,17 +118,16 @@ namespace cargo_transportation.Classes
             {
                 string temp;
                 DataRow moduleRow = dt.Rows[i];
-                if (moduleRow.ItemArray[3].ToString() == "Management")
+                if (moduleRow.ItemArray[3].ToString() == "NULL" || moduleRow.ItemArray[3].ToString() == "About")
                 {
-                    temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {0}, {0}, {0}, {0})";
-                    user.rights[i].name = moduleRow.ItemArray[3].ToString();
-                    user.rights[i].read = 0;
-                    user.rights[i].write = user.rights[i].edit = user.rights[i].delete = 0;
-                    Database.WriteData("Databases\\users.db", temp);
-                    continue;
+                    temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {1}, {0}, {0}, {0})";
+                }
+                else if (moduleRow.ItemArray[4].ToString() == "ChangePassword")
+                {
+                    temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {1}, {0}, {0}, {0})";
                 }
                 else
-                    temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {1}, {0}, {0}, {0})";
+                    temp = command + $"VALUES ('{userRow.ItemArray[0]}', '{moduleRow.ItemArray[0].ToString()}', {0}, {0}, {0}, {0})";
                 try
                 {
                     Database.WriteData("Databases\\users.db", temp);

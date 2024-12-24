@@ -116,6 +116,24 @@ namespace cargo_transportation
                     if (ProgramMenu.RegisterNewUser(user, _login, _password) == 1)
                     {
                         MessageBox.Show("Регистрация прошла успешно!", "Регистрация");
+                        var dt1 = new DataTable();
+                        using (SQLiteConnection connection = new SQLiteConnection("Data Source='Databases\\users.db';Version=3; FailIfMissing=False"))
+                        {
+                            connection.Open();
+                            using (SQLiteCommand cmd = connection.CreateCommand())
+                            {
+                                cmd.CommandText = $"SELECT * FROM Users WHERE " + "Username" + "='" + _login + "'";
+                                SQLiteDataAdapter da = new SQLiteDataAdapter(cmd);
+                                da.Fill(dt1);
+                            }
+                        }
+                        string username = "", password = "";
+                        int id = Int32.Parse(dt1.Rows[0][0].ToString());
+                        username = dt1.Rows[0][1].ToString();
+                        password = dt1.Rows[0][2].ToString();
+                        DataTable rights = Database.GetRights(id);
+                        DataTable modules = Database.GetModules();
+                        user.AddRights(rights, modules);
                         isAuthorized = true;
                         Close();
                     }
@@ -165,9 +183,7 @@ namespace cargo_transportation
         {
             this._password = Hash.hashPassword(registerPasswordBox.Text);
             progressBar2.Value = (registerPasswordBox.Text.Length >= 5) ? 100 : registerPasswordBox.Text.Length * 20;
-        }
-
-        
+        }    
 
         #endregion
 

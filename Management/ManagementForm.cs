@@ -91,8 +91,8 @@ namespace Management
                     delete = Int32.Parse(row.Cells[5].Value.ToString());
                     string command = $"UPDATE 'Rights' SET Read = {read}, Write = {write}, Edit = {edit}, Del = {delete} WHERE UserID = {userid} AND ModuleID = {moduleId}";
                     Database.WriteData("Databases\\users.db", command);
-                    MessageBox.Show("Сохранено");
                 }
+                MessageBox.Show("Сохранено");
             }
         }
     }
